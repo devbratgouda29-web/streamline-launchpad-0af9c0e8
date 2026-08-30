@@ -1052,23 +1052,22 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
               className="absolute inset-0 overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div
-                className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 p-4"
-                style={{ filter: nightModeFilter }}
-              >
+              <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 p-4">
                 {Array.from({ length: numPages }, (_, i) => (
                   <div key={i} className="relative w-full">
-                    <PdfViewer
-                      src={pdfBlobUrl!}
-                      name={item.name}
-                      className="w-full"
-                      hideControls
-                      page={i + 1}
-                      onNumPages={(n) => {
-                        setNumPages(n);
-                        setPage((p) => Math.min(Math.max(1, p), n));
-                      }}
-                    />
+                    <div style={{ filter: nightModeFilter }}>
+                      <PdfViewer
+                        src={pdfBlobUrl!}
+                        name={item.name}
+                        className="w-full"
+                        hideControls
+                        page={i + 1}
+                        onNumPages={(n) => {
+                          setNumPages(n);
+                          setPage((p) => Math.min(Math.max(1, p), n));
+                        }}
+                      />
+                    </div>
                     <AnnotateOverlay
                       page={i + 1}
                       strokes={strokes[i + 1] ?? []}
@@ -1080,23 +1079,25 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
               </div>
             </div>
           ) : (
-            <div className="absolute inset-0 flex snap-x snap-mandatory items-center overflow-x-auto p-4">
+            <div className="absolute inset-0 flex items-center justify-center p-4">
               <div
-                className="relative mx-auto flex h-full w-full max-w-3xl shrink-0 snap-center items-center justify-center"
+                className="relative flex h-full w-full max-w-3xl items-center justify-center"
                 onClick={(e) => e.stopPropagation()}
-                style={{ filter: nightModeFilter }}
               >
-                <PdfViewer
-                  src={pdfBlobUrl!}
-                  name={item.name}
-                  className="h-full w-auto max-w-full"
-                  hideControls
-                  page={page}
-                  onNumPages={(n) => {
-                    setNumPages(n);
-                    setPage((p) => Math.min(Math.max(1, p), n));
-                  }}
-                />
+                <div className="flex h-full w-full items-center justify-center" style={{ filter: nightModeFilter }}>
+                  <PdfViewer
+                    src={pdfBlobUrl!}
+                    name={item.name}
+                    className="h-full w-full"
+                    fit="contain"
+                    hideControls
+                    page={page}
+                    onNumPages={(n) => {
+                      setNumPages(n);
+                      setPage((p) => Math.min(Math.max(1, p), n));
+                    }}
+                  />
+                </div>
                 <AnnotateOverlay
                   page={page}
                   strokes={strokes[page] ?? []}
