@@ -205,7 +205,7 @@ export function AuthModal() {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[90] grid place-items-center bg-black/80 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[90] grid max-h-screen place-items-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) closeAuthModal();
       }}
