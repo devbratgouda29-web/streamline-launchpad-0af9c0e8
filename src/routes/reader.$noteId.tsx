@@ -955,8 +955,8 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
       {isPdf && (
         <div
           className={cn(
-            "absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/90 to-transparent px-3 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-6 transition-transform",
-            barOpen ? "translate-y-0" : "translate-y-full",
+            "absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/90 to-transparent px-3 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-6 transition-all duration-300 ease-out",
+            isControlsVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none",
           )}
         >
           <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center justify-center gap-2">
