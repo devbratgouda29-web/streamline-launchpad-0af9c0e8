@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Shield } from "lucide-react";
 import { WEEKLY_TIERS, type WeeklyTier, evaluateWeeklyTier } from "@/lib/weekly-badge";
 
@@ -31,7 +31,7 @@ const SIZE_MAP: Record<Size, string> = {
   xl: "h-56 w-56",
 };
 
-export function WeeklyBadge({
+function WeeklyBadgeBase({
   tier,
   size = "sm",
   showLabel = false,
@@ -114,7 +114,7 @@ export function WeeklyBadge({
   );
 }
 
-export function WeeklyBadgeFromHours(props: {
+function WeeklyBadgeFromHoursBase(props: {
   hours: number;
   size?: Size;
   showLabel?: boolean;
@@ -125,3 +125,6 @@ export function WeeklyBadgeFromHours(props: {
 }
 
 export { WEEKLY_TIERS };
+
+export const WeeklyBadge = memo(WeeklyBadgeBase);
+export const WeeklyBadgeFromHours = memo(WeeklyBadgeFromHoursBase);

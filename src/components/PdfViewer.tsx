@@ -1,27 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
+import { loadPdfjs } from "@/lib/pdf-engine";
 import { ChevronLeft, ChevronRight, Loader2, AlertTriangle, Download } from "lucide-react";
-
-// pdfjs-dist references browser globals (DOMMatrix, etc.) at module scope,
-// so it MUST NOT be imported statically — that crashes SSR. We dynamically
-// import it (and its worker URL) inside a client-only effect.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let pdfjsLibPromise: Promise<any> | null = null;
-function loadPdfjs() {
-  if (typeof window === "undefined") return Promise.reject(new Error("pdfjs unavailable on server"));
-  if (!pdfjsLibPromise) {
-    pdfjsLibPromise = (async () => {
-      const [lib, workerMod] = await Promise.all([
-        import("pdfjs-dist"),
-        import("pdfjs-dist/build/pdf.worker.min.mjs?url"),
-      ]);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (lib as any).GlobalWorkerOptions.workerSrc = (workerMod as any).default;
-      return lib;
-    })();
-  }
-  return pdfjsLibPromise;
-}
-
 
 type Props = {
   /**
@@ -89,7 +68,7 @@ function toGetDocumentParams(
  * PDFs is unreliable or blocked. Falls back to a download button on parse
  * failure.
  */
-export function PdfViewer({ src, name, className, hideControls, page: pageProp, onNumPages, onPageChange }: Props) {
+function PdfViewerBase({ src, name, className, hideControls, page: pageProp, onNumPages, onPageChange }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [numPages, setNumPages] = useState(0);
   const [pageInner, setPageInner] = useState(1);
@@ -388,4 +367,4 @@ function PinchZoomStage({ children, className }: { children: React.ReactNode; cl
   );
 }
 
-
+export const PdfViewer = memo(PdfViewerBase);

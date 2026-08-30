@@ -1,11 +1,12 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, lazy, Suspense } from "react";
 import { ArrowLeft, BookOpen, Check, Loader2, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ReviewsSection } from "@/components/ReviewsSection";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SamplePagesGallery } from "@/components/SamplePagesGallery";
-import { SamplePagesModal } from "@/components/SamplePagesModal";
+// Sample-page previewer pulls in image-heavy UI — load on demand.
+const SamplePagesModal = lazy(() => import("@/components/SamplePagesModal").then((m) => ({ default: m.SamplePagesModal })));
 import { useLanguagePreference } from "@/lib/language-preference";
 import {
   conceptList,
@@ -261,11 +262,15 @@ function NoteDetailPage() {
         </Button>
       </div>
 
-      <SamplePagesModal
-        open={previewOpen}
-        onClose={() => setPreviewOpen(false)}
-        paths={note?.preview_images ?? []}
-      />
+      {previewOpen && (
+        <Suspense fallback={null}>
+          <SamplePagesModal
+            open={previewOpen}
+            onClose={() => setPreviewOpen(false)}
+            paths={note?.preview_images ?? []}
+          />
+        </Suspense>
+      )}
 
       <ReviewsSection noteId={noteId} />
     </div>

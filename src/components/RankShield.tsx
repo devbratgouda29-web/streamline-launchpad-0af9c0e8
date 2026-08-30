@@ -1,6 +1,6 @@
 import { Shield, Medal, Trophy, Crown, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 
 // Lookup PNG override in src/assets/badges/rank_${level}.png if present.
@@ -97,7 +97,7 @@ function TierIcon({ name, className }: { name: Tier["icon"]; className?: string 
 }
 
 /** Sleek dynamic SVG shield used when no PNG asset is present. */
-export function TierShieldSVG({
+function TierShieldSVGBase({
   level,
   size = 168,
   animate = false,
@@ -180,7 +180,7 @@ function HeroShieldImg({ level, tier }: { level: number; tier: Tier }) {
 }
 
 /** Prominent top-of-dashboard rank shield frame. */
-export function RankShieldFrame({
+function RankShieldFrameBase({
 
   level,
   rankName,
@@ -265,3 +265,6 @@ export function RankShieldFrame({
     </section>
   );
 }
+
+export const TierShieldSVG = memo(TierShieldSVGBase);
+export const RankShieldFrame = memo(RankShieldFrameBase);
