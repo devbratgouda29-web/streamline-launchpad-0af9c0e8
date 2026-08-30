@@ -4,22 +4,16 @@ import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
-  Eraser,
   Home,
-  Pen,
   Settings2,
-  PencilLine,
   Sparkles,
   Timer,
-  Undo2,
-  Redo2,
   Search,
   X,
 } from "lucide-react";
 import { RecallTimerBadge } from "@/components/RecallTimerBadge";
 import { TierBadge } from "@/components/TierBadge";
 import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { ReviewsSection } from "@/components/ReviewsSection";
 import { getDeskItem, type DeskItem } from "@/lib/desk-store";
@@ -431,8 +425,6 @@ function ReaderCompletionOverlay({
 }
 
 const TOTAL_PAGES = 6;
-const MIN_SCALE = 1;
-const MAX_SCALE = 4;
 
 type Direction = "horizontal" | "vertical";
 type Background = "original" | "invert";
