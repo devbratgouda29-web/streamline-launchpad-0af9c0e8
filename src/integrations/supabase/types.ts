@@ -14,16 +14,277 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      notes: {
+        Row: {
+          concepts: string | null
+          created_at: string
+          description: string | null
+          hidden: boolean
+          id: string
+          is_free: boolean
+          is_pro: boolean
+          language: string
+          page_count: number | null
+          page_count_en: number | null
+          pair_note_id: string | null
+          pdf_path: string | null
+          pdf_path_en: string | null
+          preview_images: string[]
+          price_inr: number
+          subject: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          concepts?: string | null
+          created_at?: string
+          description?: string | null
+          hidden?: boolean
+          id?: string
+          is_free?: boolean
+          is_pro?: boolean
+          language?: string
+          page_count?: number | null
+          page_count_en?: number | null
+          pair_note_id?: string | null
+          pdf_path?: string | null
+          pdf_path_en?: string | null
+          preview_images?: string[]
+          price_inr?: number
+          subject?: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          concepts?: string | null
+          created_at?: string
+          description?: string | null
+          hidden?: boolean
+          id?: string
+          is_free?: boolean
+          is_pro?: boolean
+          language?: string
+          page_count?: number | null
+          page_count_en?: number | null
+          pair_note_id?: string | null
+          pdf_path?: string | null
+          pdf_path_en?: string | null
+          preview_images?: string[]
+          price_inr?: number
+          subject?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notes_pair_note_id_fkey"
+            columns: ["pair_note_id"]
+            isOneToOne: false
+            referencedRelation: "notes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      purchases: {
+        Row: {
+          created_at: string
+          id: string
+          note_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      review_votes: {
+        Row: {
+          created_at: string
+          id: string
+          review_id: string
+          user_id: string
+          vote: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          review_id: string
+          user_id: string
+          vote: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          review_id?: string
+          user_id?: string
+          vote?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_votes_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          author_city: string | null
+          author_name: string | null
+          comment: string | null
+          created_at: string
+          headline: string | null
+          hidden: boolean
+          id: string
+          note_id: string
+          rating: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          author_city?: string | null
+          author_name?: string | null
+          comment?: string | null
+          created_at?: string
+          headline?: string | null
+          hidden?: boolean
+          id?: string
+          note_id: string
+          rating: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          author_city?: string | null
+          author_name?: string | null
+          comment?: string | null
+          created_at?: string
+          headline?: string | null
+          hidden?: boolean
+          id?: string
+          note_id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      revision_logs: {
+        Row: {
+          base_minutes: number
+          chapter_name: string
+          completed_at: string
+          created_at: string
+          id: string
+          item_id: string
+          overtime_minutes: number
+          subject: string
+          total_minutes_spent: number
+          user_id: string
+        }
+        Insert: {
+          base_minutes?: number
+          chapter_name: string
+          completed_at?: string
+          created_at?: string
+          id?: string
+          item_id: string
+          overtime_minutes?: number
+          subject?: string
+          total_minutes_spent?: number
+          user_id: string
+        }
+        Update: {
+          base_minutes?: number
+          chapter_name?: string
+          completed_at?: string
+          created_at?: string
+          id?: string
+          item_id?: string
+          overtime_minutes?: number
+          subject?: string
+          total_minutes_spent?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +411,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
