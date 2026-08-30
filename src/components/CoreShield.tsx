@@ -1,6 +1,7 @@
+import { memo } from "react";
 // Shared medieval core/habit shield badge used by both the live dashboard and
 // the off-screen PDF canvas. Pure inline SVG so html2canvas can rasterise it.
-export function CoreShield({
+function CoreShieldBase({
   color,
   glow,
   size = 84,
@@ -78,3 +79,5 @@ export function CoreShield({
     </svg>
   );
 }
+
+export const CoreShield = memo(CoreShieldBase);

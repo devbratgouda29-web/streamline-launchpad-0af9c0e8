@@ -68,7 +68,7 @@ function toGetDocumentParams(
  * PDFs is unreliable or blocked. Falls back to a download button on parse
  * failure.
  */
-export function PdfViewer({ src, name, className, hideControls, page: pageProp, onNumPages, onPageChange }: Props) {
+function PdfViewerBase({ src, name, className, hideControls, page: pageProp, onNumPages, onPageChange }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [numPages, setNumPages] = useState(0);
   const [pageInner, setPageInner] = useState(1);
@@ -367,4 +367,4 @@ function PinchZoomStage({ children, className }: { children: React.ReactNode; cl
   );
 }
 
-
+export const PdfViewer = memo(PdfViewerBase);

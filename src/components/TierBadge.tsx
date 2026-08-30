@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Shield, Cog, ShieldCheck, Snowflake, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -67,7 +68,7 @@ export function tierStyle(tier: TierNumber) {
   return STYLES[tier];
 }
 
-export function TierBadge({
+function TierBadgeBase({
   tier,
   size = 48,
   fractured = false,
@@ -149,3 +150,5 @@ export function TierBadge({
     </div>
   );
 }
+
+export const TierBadge = memo(TierBadgeBase);
