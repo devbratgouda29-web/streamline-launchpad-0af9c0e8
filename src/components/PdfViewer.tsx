@@ -259,11 +259,24 @@ export function PdfViewer({ src, name, className, fit = "width", hideControls, p
   }
 
   return (
-    <div className={"flex flex-col bg-neutral-900 " + (className ?? "")}>
-      <PinchZoomStage className="flex-1 overflow-hidden bg-white">
+    <div
+      className={
+        "flex min-h-0 flex-col " +
+        (fit === "contain" ? "bg-transparent " : "bg-neutral-900 ") +
+        (className ?? "")
+      }
+    >
+      <PinchZoomStage
+        className={
+          "min-h-0 flex-1 overflow-hidden " + (fit === "contain" ? "bg-transparent" : "bg-white")
+        }
+      >
         <div
           ref={containerRef}
-          className="h-full w-full overflow-auto"
+          className={
+            "h-full w-full overflow-auto " +
+            (fit === "contain" ? "flex items-center justify-center" : "")
+          }
           style={{ WebkitOverflowScrolling: "touch" }}
         />
       </PinchZoomStage>
