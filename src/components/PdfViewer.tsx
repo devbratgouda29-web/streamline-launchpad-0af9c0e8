@@ -147,12 +147,18 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
   }, [src]);
 
 
-  // Render current page.
+  // Render current page. Any in-flight render task is cancelled before a new
+  // one starts so two renders never share the same canvas context.
   useEffect(() => {
     if (!docRef.current || !numPages) return;
     let cancelled = false;
     const container = containerRef.current;
     if (!container) return;
+
+    // Cancel a previous render still in flight (page / view mode change).
+    try { renderTaskRef.current?.cancel?.(); } catch { /* ignore */ }
+    renderTaskRef.current = null;
+    setRendering(true);
 
     (async () => {
       try {
@@ -176,18 +182,31 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
         if (!ctx) throw new Error("Canvas 2D not available");
         ctx.scale(dpr, dpr);
 
-        await pageObj.render({ canvasContext: ctx, viewport }).promise;
+        const task = pageObj.render({ canvasContext: ctx, viewport });
+        renderTaskRef.current = task;
+        await task.promise;
+        renderTaskRef.current = null;
         if (cancelled) return;
 
         // Swap in.
         container.replaceChildren(canvas);
+        setRendering(false);
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Failed to render page");
+        // A cancelled render is expected during fast page flips — not an error.
+        const name = (e as { name?: string } | null)?.name;
+        if (cancelled || name === "RenderingCancelledException") return;
+        setError(e instanceof Error ? e.message : "Failed to render page");
+        setRendering(false);
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      try { renderTaskRef.current?.cancel?.(); } catch { /* ignore */ }
+      renderTaskRef.current = null;
+    };
   }, [page, numPages]);
+
 
   if (loading) {
     return (
