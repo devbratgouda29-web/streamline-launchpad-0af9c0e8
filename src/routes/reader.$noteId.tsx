@@ -443,7 +443,7 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
   const recall = useReaderRecall(noteId, mode);
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [barOpen, setBarOpen] = useState(true);
+  const [isControlsVisible, setIsControlsVisible] = useState(true);
   const [blurred, setBlurred] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
 
@@ -512,8 +512,8 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
       {/* Top bar */}
       <div
         className={cn(
-          "absolute inset-x-0 top-0 z-20 flex items-center gap-3 bg-gradient-to-b from-black/90 to-transparent px-4 pb-6 pt-3 transition-transform",
-          barOpen ? "translate-y-0" : "-translate-y-full",
+          "absolute inset-x-0 top-0 z-20 flex items-center gap-3 bg-gradient-to-b from-black/90 to-transparent px-4 pb-6 pt-3 transition-all duration-300 ease-out",
+          isControlsVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none",
         )}
       >
         {recall.active && recall.inOvertime && !recall.completed ? (
@@ -543,21 +543,11 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
           "relative flex-1 overflow-hidden",
           direction === "vertical" && "overflow-y-auto",
         )}
-        onClick={(e) => {
-          if (direction === "vertical" || !pageByPage) {
-            setBarOpen((v) => !v);
-            return;
-          }
-          const w = e.currentTarget.clientWidth;
-          const x = e.clientX - e.currentTarget.getBoundingClientRect().left;
-          if (x < w * 0.3) prev();
-          else if (x > w * 0.7) next();
-          else setBarOpen((v) => !v);
-        }}
+        onClick={() => setIsControlsVisible((v) => !v)}
       >
         {pdfUrl ? (
           direction === "vertical" ? (
-            <div className="absolute inset-0 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="absolute inset-0 overflow-y-auto">
               <div
                 className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 p-4"
                 style={{ filter: nightModeFilter }}
@@ -581,7 +571,6 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
             <div className="absolute inset-0 flex snap-x snap-mandatory items-center overflow-x-auto p-4">
               <div
                 className="relative mx-auto flex h-full w-full max-w-3xl shrink-0 snap-center items-center justify-center"
-                onClick={(e) => e.stopPropagation()}
                 style={{ filter: nightModeFilter }}
               >
                 <PdfViewer
@@ -697,8 +686,8 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
       {/* Bottom bar */}
       <div
         className={cn(
-          "absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/90 to-transparent px-3 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-6 transition-transform",
-          barOpen ? "translate-y-0" : "translate-y-full",
+          "absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/90 to-transparent px-3 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-6 transition-all duration-300 ease-out",
+          isControlsVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none",
         )}
       >
         <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center justify-center gap-2">
