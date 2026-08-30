@@ -692,7 +692,7 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
       >
         <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center justify-center gap-2">
         <button
-          onClick={prev}
+          onClick={(e) => { e.stopPropagation(); prev(); }}
           disabled={page === 1 || direction === "vertical"}
           className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 disabled:opacity-30"
           aria-label="Previous page"
@@ -705,11 +705,12 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
           max={totalPages}
           value={page}
           onChange={(e) => setPage(Number(e.target.value))}
+          onClick={(e) => e.stopPropagation()}
           className="min-w-0 flex-1 basis-40 accent-[oklch(0.78_0.14_78)]"
           aria-label="Page scrubber"
         />
         <button
-          onClick={next}
+          onClick={(e) => { e.stopPropagation(); next(); }}
           disabled={page === totalPages || direction === "vertical"}
           className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 disabled:opacity-30"
           aria-label="Next page"
@@ -718,13 +719,13 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
         </button>
         <PageSearch total={totalPages} onGo={(p) => setPage(p)} />
         <button
-          onClick={() => setViewOpen(true)}
+          onClick={(e) => { e.stopPropagation(); setViewOpen(true); }}
           className="flex shrink-0 items-center gap-1 rounded-full bg-white/10 px-3 py-2 text-[11px] font-semibold"
         >
           <Settings2 className="h-3.5 w-3.5" /> View
         </button>
         <button
-          onClick={() => setShowReviews((v) => !v)}
+          onClick={(e) => { e.stopPropagation(); setShowReviews((v) => !v); }}
           className="shrink-0 rounded-full bg-accent-amber px-3 py-2 text-[11px] font-bold text-accent-amber-foreground"
         >
           Reviews
