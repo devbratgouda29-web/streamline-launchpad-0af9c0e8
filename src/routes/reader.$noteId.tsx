@@ -1591,7 +1591,7 @@ function AnnotateOverlay({
   return (
     <canvas
       ref={canvasRef}
-      className="absolute left-0 top-0"
+      className="absolute left-0 top-0 z-20"
 
       style={{
         touchAction: "none",
