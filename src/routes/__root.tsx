@@ -7,10 +7,16 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-import appCss from "../styles.css?url";
+import "../styles.css";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Toaster } from "@/components/ui/sonner";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { PerformanceReportToast } from "@/components/PerformanceReportToast";
+import { RecoveryScreen } from "@/components/RecoveryScreen";
+import { AuthProvider } from "@/hooks/use-auth";
+import { AuthModal } from "@/components/AuthModal";
 
 function NotFoundComponent() {
   return (
@@ -76,24 +82,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#121212" },
+      { title: "From The Last Bench — Study Notes" },
+      { name: "description", content: "Affordable, high-quality digital study notes from your favourite YouTube educator. Lifetime access, ₹20–₹30 per note." },
+      { property: "og:title", content: "From The Last Bench — Study Notes" },
+      { property: "og:description", content: "Affordable, high-quality digital study notes. Lifetime access, ₹20–₹30 per note." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" },
     ],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -116,11 +122,33 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  // Client mounting guard: browser-only stores (localStorage, audio, canvas)
+  // are read deep in the tree, so we only mount the app after hydration to
+  // guarantee the preview never blanks out on a server/client mismatch.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <AuthProvider>
+      <ErrorBoundary fallback={(_err, reset) => <RecoveryScreen onReset={reset} />}>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        {mounted ? (
+          <Outlet />
+        ) : (
+          <div className="flex min-h-[100dvh] items-center justify-center bg-background text-sm text-muted-foreground">
+            Loading...
+          </div>
+        )}
+      </ErrorBoundary>
+      <ErrorBoundary fallback={() => null}>
+        <PerformanceReportToast />
+      </ErrorBoundary>
+      <ErrorBoundary fallback={() => null}>
+        <AuthModal />
+      </ErrorBoundary>
+      <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
