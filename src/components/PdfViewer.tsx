@@ -155,6 +155,24 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
   }, [src]);
 
 
+  // Re-render the page whenever the container box changes (e.g. switching
+  // between horizontal and vertical reading modes, rotation, resize).
+  const [sizeTick, setSizeTick] = useState(0);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || typeof ResizeObserver === "undefined") return;
+    let last = { w: 0, h: 0 };
+    const ro = new ResizeObserver(() => {
+      const w = Math.round(container.clientWidth);
+      const h = Math.round(container.clientHeight);
+      if (Math.abs(w - last.w) < 2 && Math.abs(h - last.h) < 2) return;
+      last = { w, h };
+      setSizeTick((t) => t + 1);
+    });
+    ro.observe(container);
+    return () => ro.disconnect();
+  }, [numPages]);
+
   // Render current page.
   useEffect(() => {
     if (!docRef.current || !numPages) return;
@@ -168,18 +186,30 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
         const pageObj = await doc.getPage(page);
         if (cancelled) return;
         const containerWidth = container.clientWidth || 320;
+        const containerHeight = container.clientHeight || 0;
         const unscaled = pageObj.getViewport({ scale: 1 });
-        // Scale so the page fits container width; cap DPR at 2 for perf.
-        const scale = containerWidth / unscaled.width;
+        // "width" fits the page to the container width (vertical scrolling).
+        // "contain" fits the entire page inside the box so nothing is cropped.
+        const widthScale = containerWidth / unscaled.width;
+        const scale =
+          fit === "contain" && containerHeight > 0
+            ? Math.min(widthScale, containerHeight / unscaled.height)
+            : widthScale;
         const dpr = Math.min(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1, 2);
         const viewport = pageObj.getViewport({ scale });
 
         const canvas = document.createElement("canvas");
         canvas.width = Math.floor(viewport.width * dpr);
         canvas.height = Math.floor(viewport.height * dpr);
-        canvas.style.width = "100%";
-        canvas.style.height = "auto";
+        if (fit === "contain") {
+          canvas.style.width = `${Math.floor(viewport.width)}px`;
+          canvas.style.height = `${Math.floor(viewport.height)}px`;
+        } else {
+          canvas.style.width = "100%";
+          canvas.style.height = "auto";
+        }
         canvas.style.display = "block";
+        canvas.style.margin = "auto";
         const ctx = canvas.getContext("2d");
         if (!ctx) throw new Error("Canvas 2D not available");
         ctx.scale(dpr, dpr);
@@ -195,7 +225,7 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
     })();
 
     return () => { cancelled = true; };
-  }, [page, numPages]);
+  }, [page, numPages, fit, sizeTick]);
 
   if (loading) {
     return (
