@@ -103,9 +103,13 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
     });
   };
   const [loading, setLoading] = useState(true);
+  const [rendering, setRendering] = useState(true);
   const [error, setError] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const docRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderTaskRef = useRef<any>(null);
+
 
 
   // Load document.
@@ -147,12 +151,18 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
   }, [src]);
 
 
-  // Render current page.
+  // Render current page. Any in-flight render task is cancelled before a new
+  // one starts so two renders never share the same canvas context.
   useEffect(() => {
     if (!docRef.current || !numPages) return;
     let cancelled = false;
     const container = containerRef.current;
     if (!container) return;
+
+    // Cancel a previous render still in flight (page / view mode change).
+    try { renderTaskRef.current?.cancel?.(); } catch { /* ignore */ }
+    renderTaskRef.current = null;
+    setRendering(true);
 
     (async () => {
       try {
@@ -176,18 +186,31 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
         if (!ctx) throw new Error("Canvas 2D not available");
         ctx.scale(dpr, dpr);
 
-        await pageObj.render({ canvasContext: ctx, viewport }).promise;
+        const task = pageObj.render({ canvasContext: ctx, viewport });
+        renderTaskRef.current = task;
+        await task.promise;
+        renderTaskRef.current = null;
         if (cancelled) return;
 
         // Swap in.
         container.replaceChildren(canvas);
+        setRendering(false);
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Failed to render page");
+        // A cancelled render is expected during fast page flips — not an error.
+        const name = (e as { name?: string } | null)?.name;
+        if (cancelled || name === "RenderingCancelledException") return;
+        setError(e instanceof Error ? e.message : "Failed to render page");
+        setRendering(false);
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      try { renderTaskRef.current?.cancel?.(); } catch { /* ignore */ }
+      renderTaskRef.current = null;
+    };
   }, [page, numPages]);
+
 
   if (loading) {
     return (
@@ -222,13 +245,19 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
 
   return (
     <div className={"flex flex-col bg-neutral-900 " + (className ?? "")}>
-      <PinchZoomStage className="flex-1 overflow-hidden bg-white">
+      <PinchZoomStage className="relative flex-1 overflow-hidden bg-white">
         <div
           ref={containerRef}
           className="h-full w-full overflow-auto"
           style={{ WebkitOverflowScrolling: "touch" }}
         />
+        {rendering && (
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-2 bg-neutral-900/70 text-sm text-white/80">
+            <Loader2 className="h-4 w-4 animate-spin" /> Rendering page…
+          </div>
+        )}
       </PinchZoomStage>
+
       {!hideControls && (
         <div className="flex items-center justify-between gap-2 border-t border-white/10 bg-black/60 px-3 py-2 text-[11px] font-semibold text-white/80">
           <button
