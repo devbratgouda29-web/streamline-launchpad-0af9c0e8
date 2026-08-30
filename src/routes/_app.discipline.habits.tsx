@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
 import { toast } from "sonner";
 import {
   ArrowLeft,
@@ -16,7 +16,8 @@ import {
 import { cn } from "@/lib/utils";
 import { RankShieldFrame } from "@/components/RankShield";
 import { useAuth } from "@/hooks/use-auth";
-import { RankUpCelebration } from "@/components/RankUpCelebration";
+// Celebration overlay is only mounted on a rank-up — keep it out of the initial chunk.
+const RankUpCelebration = lazy(() => import("@/components/RankUpCelebration").then((m) => ({ default: m.RankUpCelebration })));
 
 export const Route = createFileRoute("/_app/discipline/habits")({
   head: () => ({
@@ -394,11 +395,13 @@ function HabitTrackerPage() {
         />
       )}
       {celebration && (
-        <RankUpCelebration
-          level={celebration.level}
-          rankName={celebration.name}
-          onDismiss={() => setCelebration(null)}
-        />
+        <Suspense fallback={null}>
+          <RankUpCelebration
+            level={celebration.level}
+            rankName={celebration.name}
+            onDismiss={() => setCelebration(null)}
+          />
+        </Suspense>
       )}
     </div>
   );

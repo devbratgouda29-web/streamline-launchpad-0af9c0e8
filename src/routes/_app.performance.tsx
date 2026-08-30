@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
 import {
   ArrowLeft,
   Download,
@@ -32,7 +32,8 @@ import { WeeklyBadge } from "@/components/WeeklyBadge";
 import { ackReportPrompt } from "@/lib/weekly-badge";
 import { markReportClaimed } from "@/lib/weekly-report-pdf";
 import { exportSectionsToPdf } from "@/lib/dom-pdf";
-import { PerformanceDashboard } from "@/components/PerformanceDashboard";
+// Chart-heavy dashboard (recharts) — split out of the route entry chunk.
+const PerformanceDashboard = lazy(() => import("@/components/PerformanceDashboard").then((m) => ({ default: m.PerformanceDashboard })));
 import { buildLedgerRows, readHabitsLite } from "@/lib/report-data";
 
 import { getAllItems, type RevisionItem } from "@/lib/revision-engine";
@@ -310,6 +311,7 @@ function PerformancePage() {
         <ArrowLeft className="h-4 w-4" />
       </Link>
 
+      <Suspense fallback={<DashboardSkeleton />}>
       <PerformanceDashboard
         metrics={metrics}
         ledger={ledger}

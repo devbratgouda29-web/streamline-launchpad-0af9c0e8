@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
 import { toast } from "sonner";
 import {
   BadgeCheck,
@@ -21,7 +21,10 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { initialsFor, useAuth } from "@/hooks/use-auth";
-import { ProfileInfoModals, type ProfileModalKey } from "@/components/ProfileInfoModals";
+import type { ProfileModalKey } from "@/components/ProfileInfoModals";
+
+// Heavy static-content modal — loaded only when the user opens it.
+const ProfileInfoModals = lazy(() => import("@/components/ProfileInfoModals").then((m) => ({ default: m.ProfileInfoModals })));
 import { isSubscriptionActive, isTrialActive } from "@/lib/subscription-store";
 
 export const Route = createFileRoute("/_app/profile")({
@@ -302,7 +305,11 @@ function ProfilePage() {
         />
       </ul>
 
-      <ProfileInfoModals active={modal} onClose={() => setModal(null)} />
+      {modal && (
+        <Suspense fallback={null}>
+          <ProfileInfoModals active={modal} onClose={() => setModal(null)} />
+        </Suspense>
+      )}
 
       {user && (
         <button
