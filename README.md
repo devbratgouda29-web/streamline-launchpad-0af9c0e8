@@ -1,12 +1,12 @@
 # Streamline Launchpad
 
-Please import& build my existing project directly from this Github repository:  https://github.com/devbratgouda29-web/streamline-launchpad-e5b01ad5.git
+Import repository [https://github.com/devbratgouda29-web/streamline-launchpad](https://github.com/devbratgouda29-web/streamline-launchpad)
 
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/f925b313-2594-4009-b990-4be6c1b36e4c).
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/0257cdee-fbd9-4106-9946-033d58b92052).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.

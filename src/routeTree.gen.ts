@@ -10,33 +10,264 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SplatRouteImport } from './routes/$'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AppAdminRouteImport } from './routes/_app.admin'
+import { Route as AppDisciplineRouteImport } from './routes/_app.discipline'
+import { Route as AppHomeRouteImport } from './routes/_app.home'
+import { Route as AppLibraryRouteImport } from './routes/_app.library'
+import { Route as AppPerformanceRouteImport } from './routes/_app.performance'
+import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as ReaderNoteIdRouteImport } from './routes/reader.$noteId'
+import { Route as RecallItemIdRouteImport } from './routes/recall.$itemId'
+import { Route as AppDisciplineIndexRouteImport } from './routes/_app.discipline.index'
+import { Route as AppDisciplineAlarmRouteImport } from './routes/_app.discipline.alarm'
+import { Route as AppDisciplineFocusRouteImport } from './routes/_app.discipline.focus'
+import { Route as AppDisciplineHabitsRouteImport } from './routes/_app.discipline.habits'
+import { Route as AppDisciplineMissionRouteImport } from './routes/_app.discipline.mission'
+import { Route as AppDisciplineWarCouncilRouteImport } from './routes/_app.discipline.war-council'
+import { Route as AppNotesNoteIdRouteImport } from './routes/_app.notes.$noteId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDisciplineRoute = AppDisciplineRouteImport.update({
+  id: '/discipline',
+  path: '/discipline',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppHomeRoute = AppHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLibraryRoute = AppLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPerformanceRoute = AppPerformanceRouteImport.update({
+  id: '/performance',
+  path: '/performance',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReaderNoteIdRoute = ReaderNoteIdRouteImport.update({
+  id: '/reader/$noteId',
+  path: '/reader/$noteId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecallItemIdRoute = RecallItemIdRouteImport.update({
+  id: '/recall/$itemId',
+  path: '/recall/$itemId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppDisciplineIndexRoute = AppDisciplineIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppDisciplineRoute,
+} as any)
+const AppDisciplineAlarmRoute = AppDisciplineAlarmRouteImport.update({
+  id: '/alarm',
+  path: '/alarm',
+  getParentRoute: () => AppDisciplineRoute,
+} as any)
+const AppDisciplineFocusRoute = AppDisciplineFocusRouteImport.update({
+  id: '/focus',
+  path: '/focus',
+  getParentRoute: () => AppDisciplineRoute,
+} as any)
+const AppDisciplineHabitsRoute = AppDisciplineHabitsRouteImport.update({
+  id: '/habits',
+  path: '/habits',
+  getParentRoute: () => AppDisciplineRoute,
+} as any)
+const AppDisciplineMissionRoute = AppDisciplineMissionRouteImport.update({
+  id: '/mission',
+  path: '/mission',
+  getParentRoute: () => AppDisciplineRoute,
+} as any)
+const AppDisciplineWarCouncilRoute = AppDisciplineWarCouncilRouteImport.update({
+  id: '/war-council',
+  path: '/war-council',
+  getParentRoute: () => AppDisciplineRoute,
+} as any)
+const AppNotesNoteIdRoute = AppNotesNoteIdRouteImport.update({
+  id: '/notes/$noteId',
+  path: '/notes/$noteId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AppAdminRoute
+  '/discipline': typeof AppDisciplineRouteWithChildren
+  '/home': typeof AppHomeRoute
+  '/library': typeof AppLibraryRoute
+  '/performance': typeof AppPerformanceRoute
+  '/profile': typeof AppProfileRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/reader/$noteId': typeof ReaderNoteIdRoute
+  '/recall/$itemId': typeof RecallItemIdRoute
+  '/discipline/alarm': typeof AppDisciplineAlarmRoute
+  '/discipline/focus': typeof AppDisciplineFocusRoute
+  '/discipline/habits': typeof AppDisciplineHabitsRoute
+  '/discipline/mission': typeof AppDisciplineMissionRoute
+  '/discipline/war-council': typeof AppDisciplineWarCouncilRoute
+  '/notes/$noteId': typeof AppNotesNoteIdRoute
+  '/discipline/': typeof AppDisciplineIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AppAdminRoute
+  '/home': typeof AppHomeRoute
+  '/library': typeof AppLibraryRoute
+  '/performance': typeof AppPerformanceRoute
+  '/profile': typeof AppProfileRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/reader/$noteId': typeof ReaderNoteIdRoute
+  '/recall/$itemId': typeof RecallItemIdRoute
+  '/discipline/alarm': typeof AppDisciplineAlarmRoute
+  '/discipline/focus': typeof AppDisciplineFocusRoute
+  '/discipline/habits': typeof AppDisciplineHabitsRoute
+  '/discipline/mission': typeof AppDisciplineMissionRoute
+  '/discipline/war-council': typeof AppDisciplineWarCouncilRoute
+  '/notes/$noteId': typeof AppNotesNoteIdRoute
+  '/discipline': typeof AppDisciplineIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/_app': typeof AppRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
+  '/_app/admin': typeof AppAdminRoute
+  '/_app/discipline': typeof AppDisciplineRouteWithChildren
+  '/_app/home': typeof AppHomeRoute
+  '/_app/library': typeof AppLibraryRoute
+  '/_app/performance': typeof AppPerformanceRoute
+  '/_app/profile': typeof AppProfileRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/reader/$noteId': typeof ReaderNoteIdRoute
+  '/recall/$itemId': typeof RecallItemIdRoute
+  '/_app/discipline/alarm': typeof AppDisciplineAlarmRoute
+  '/_app/discipline/focus': typeof AppDisciplineFocusRoute
+  '/_app/discipline/habits': typeof AppDisciplineHabitsRoute
+  '/_app/discipline/mission': typeof AppDisciplineMissionRoute
+  '/_app/discipline/war-council': typeof AppDisciplineWarCouncilRoute
+  '/_app/notes/$noteId': typeof AppNotesNoteIdRoute
+  '/_app/discipline/': typeof AppDisciplineIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/reset-password'
+    | '/admin'
+    | '/discipline'
+    | '/home'
+    | '/library'
+    | '/performance'
+    | '/profile'
+    | '/auth/callback'
+    | '/reader/$noteId'
+    | '/recall/$itemId'
+    | '/discipline/alarm'
+    | '/discipline/focus'
+    | '/discipline/habits'
+    | '/discipline/mission'
+    | '/discipline/war-council'
+    | '/notes/$noteId'
+    | '/discipline/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/$'
+    | '/reset-password'
+    | '/admin'
+    | '/home'
+    | '/library'
+    | '/performance'
+    | '/profile'
+    | '/auth/callback'
+    | '/reader/$noteId'
+    | '/recall/$itemId'
+    | '/discipline/alarm'
+    | '/discipline/focus'
+    | '/discipline/habits'
+    | '/discipline/mission'
+    | '/discipline/war-council'
+    | '/notes/$noteId'
+    | '/discipline'
+  id:
+    | '__root__'
+    | '/'
+    | '/$'
+    | '/_app'
+    | '/reset-password'
+    | '/_app/admin'
+    | '/_app/discipline'
+    | '/_app/home'
+    | '/_app/library'
+    | '/_app/performance'
+    | '/_app/profile'
+    | '/auth/callback'
+    | '/reader/$noteId'
+    | '/recall/$itemId'
+    | '/_app/discipline/alarm'
+    | '/_app/discipline/focus'
+    | '/_app/discipline/habits'
+    | '/_app/discipline/mission'
+    | '/_app/discipline/war-council'
+    | '/_app/notes/$noteId'
+    | '/_app/discipline/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
+  AppRoute: typeof AppRouteWithChildren
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
+  ReaderNoteIdRoute: typeof ReaderNoteIdRoute
+  RecallItemIdRoute: typeof RecallItemIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +279,194 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discipline': {
+      id: '/_app/discipline'
+      path: '/discipline'
+      fullPath: '/discipline'
+      preLoaderRoute: typeof AppDisciplineRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/home': {
+      id: '/_app/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AppHomeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/library': {
+      id: '/_app/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof AppLibraryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/performance': {
+      id: '/_app/performance'
+      path: '/performance'
+      fullPath: '/performance'
+      preLoaderRoute: typeof AppPerformanceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reader/$noteId': {
+      id: '/reader/$noteId'
+      path: '/reader/$noteId'
+      fullPath: '/reader/$noteId'
+      preLoaderRoute: typeof ReaderNoteIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recall/$itemId': {
+      id: '/recall/$itemId'
+      path: '/recall/$itemId'
+      fullPath: '/recall/$itemId'
+      preLoaderRoute: typeof RecallItemIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/discipline/': {
+      id: '/_app/discipline/'
+      path: '/'
+      fullPath: '/discipline/'
+      preLoaderRoute: typeof AppDisciplineIndexRouteImport
+      parentRoute: typeof AppDisciplineRoute
+    }
+    '/_app/discipline/alarm': {
+      id: '/_app/discipline/alarm'
+      path: '/alarm'
+      fullPath: '/discipline/alarm'
+      preLoaderRoute: typeof AppDisciplineAlarmRouteImport
+      parentRoute: typeof AppDisciplineRoute
+    }
+    '/_app/discipline/focus': {
+      id: '/_app/discipline/focus'
+      path: '/focus'
+      fullPath: '/discipline/focus'
+      preLoaderRoute: typeof AppDisciplineFocusRouteImport
+      parentRoute: typeof AppDisciplineRoute
+    }
+    '/_app/discipline/habits': {
+      id: '/_app/discipline/habits'
+      path: '/habits'
+      fullPath: '/discipline/habits'
+      preLoaderRoute: typeof AppDisciplineHabitsRouteImport
+      parentRoute: typeof AppDisciplineRoute
+    }
+    '/_app/discipline/mission': {
+      id: '/_app/discipline/mission'
+      path: '/mission'
+      fullPath: '/discipline/mission'
+      preLoaderRoute: typeof AppDisciplineMissionRouteImport
+      parentRoute: typeof AppDisciplineRoute
+    }
+    '/_app/discipline/war-council': {
+      id: '/_app/discipline/war-council'
+      path: '/war-council'
+      fullPath: '/discipline/war-council'
+      preLoaderRoute: typeof AppDisciplineWarCouncilRouteImport
+      parentRoute: typeof AppDisciplineRoute
+    }
+    '/_app/notes/$noteId': {
+      id: '/_app/notes/$noteId'
+      path: '/notes/$noteId'
+      fullPath: '/notes/$noteId'
+      preLoaderRoute: typeof AppNotesNoteIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppDisciplineRouteChildren {
+  AppDisciplineAlarmRoute: typeof AppDisciplineAlarmRoute
+  AppDisciplineFocusRoute: typeof AppDisciplineFocusRoute
+  AppDisciplineHabitsRoute: typeof AppDisciplineHabitsRoute
+  AppDisciplineMissionRoute: typeof AppDisciplineMissionRoute
+  AppDisciplineWarCouncilRoute: typeof AppDisciplineWarCouncilRoute
+  AppDisciplineIndexRoute: typeof AppDisciplineIndexRoute
+}
+
+const AppDisciplineRouteChildren: AppDisciplineRouteChildren = {
+  AppDisciplineAlarmRoute: AppDisciplineAlarmRoute,
+  AppDisciplineFocusRoute: AppDisciplineFocusRoute,
+  AppDisciplineHabitsRoute: AppDisciplineHabitsRoute,
+  AppDisciplineMissionRoute: AppDisciplineMissionRoute,
+  AppDisciplineWarCouncilRoute: AppDisciplineWarCouncilRoute,
+  AppDisciplineIndexRoute: AppDisciplineIndexRoute,
+}
+
+const AppDisciplineRouteWithChildren = AppDisciplineRoute._addFileChildren(
+  AppDisciplineRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
+  AppDisciplineRoute: typeof AppDisciplineRouteWithChildren
+  AppHomeRoute: typeof AppHomeRoute
+  AppLibraryRoute: typeof AppLibraryRoute
+  AppPerformanceRoute: typeof AppPerformanceRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppNotesNoteIdRoute: typeof AppNotesNoteIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
+  AppDisciplineRoute: AppDisciplineRouteWithChildren,
+  AppHomeRoute: AppHomeRoute,
+  AppLibraryRoute: AppLibraryRoute,
+  AppPerformanceRoute: AppPerformanceRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppNotesNoteIdRoute: AppNotesNoteIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SplatRoute: SplatRoute,
+  AppRoute: AppRouteWithChildren,
+  ResetPasswordRoute: ResetPasswordRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
+  ReaderNoteIdRoute: ReaderNoteIdRoute,
+  RecallItemIdRoute: RecallItemIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
