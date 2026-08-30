@@ -519,14 +519,16 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
         {recall.active && recall.inOvertime && !recall.completed ? (
           <button
             type="button"
-            onClick={recall.finishNow}
+            onClick={(e) => { e.stopPropagation(); recall.finishNow(); }}
             className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-emerald-300/60 bg-emerald-500/25 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-50 shadow-lg backdrop-blur hover:bg-emerald-500/40"
           >
             <Sparkles className="h-3.5 w-3.5" /> Finish &amp; Claim Reward
           </button>
         ) : null}
         {recall.active ? (
-          <RecallTimerBadge sourceId={noteId} onClaim={recall.claim} />
+          <div onClick={(e) => e.stopPropagation()}>
+            <RecallTimerBadge sourceId={noteId} onClaim={recall.claim} />
+          </div>
         ) : null}
 
         <div className="min-w-0 flex-1">
