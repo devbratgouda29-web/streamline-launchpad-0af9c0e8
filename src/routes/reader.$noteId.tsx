@@ -71,7 +71,7 @@ export const Route = createFileRoute("/reader/$noteId")({
   head: () => ({
     meta: [
       { title: "Reader — From The Last Bench" },
-      { name: "description", content: "Read your purchased note pack with annotation tools." },
+      { name: "description", content: "Read your purchased note pack in a distraction-free reader." },
     ],
   }),
   component: ReaderPage,
@@ -509,7 +509,6 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
 
   const nightModeFilter = background === "invert" ? "invert(1) hue-rotate(180deg)" : "none";
 
-  const annotate: AnnotateSettings = { active: annotateOpen, tool, color, size };
 
 
   return (
@@ -553,7 +552,6 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
           direction === "vertical" && "overflow-y-auto",
         )}
         onClick={(e) => {
-          if (annotateOpen) return;
           if (direction === "vertical" || !pageByPage) {
             setBarOpen((v) => !v);
             return;
@@ -619,28 +617,13 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
         ) : direction === "horizontal" ? (
           <div className="absolute inset-0 flex snap-x snap-mandatory items-center gap-4 overflow-x-auto px-4 py-4">
             <div className="mx-auto flex w-full max-w-3xl shrink-0 snap-center items-center justify-center">
-              <PageStage
-                page={page}
-                direction={direction}
-                strokes={strokes[page] ?? []}
-                onCommitStroke={commitStroke}
-                annotate={annotate}
-                nightModeFilter={nightModeFilter}
-              />
+              <PageStage page={page} nightModeFilter={nightModeFilter} />
             </div>
           </div>
         ) : (
           <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 p-4">
             {Array.from({ length: totalPages }, (_, i) => (
-              <PageStage
-                key={i}
-                page={i + 1}
-                direction={direction}
-                strokes={strokes[i + 1] ?? []}
-                onCommitStroke={commitStroke}
-                annotate={annotate}
-                nightModeFilter={nightModeFilter}
-              />
+              <PageStage key={i} page={i + 1} nightModeFilter={nightModeFilter} />
             ))}
           </div>
         )}
@@ -754,10 +737,7 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
         </button>
         <PageSearch total={totalPages} onGo={(p) => setPage(p)} />
         <button
-          onClick={() => {
-            setViewOpen(true);
-            setAnnotateOpen(false);
-          }}
+          onClick={() => setViewOpen(true)}
           className="flex shrink-0 items-center gap-1 rounded-full bg-white/10 px-3 py-2 text-[11px] font-semibold"
         >
           <Settings2 className="h-3.5 w-3.5" /> View
@@ -843,7 +823,6 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
   const track = getItemBySource(noteId);
   const nightModeFilter = background === "invert" ? "invert(1) hue-rotate(180deg)" : "none";
   const isPdf = item.kind === "pdf" && !!pdfBlobUrl;
-  const annotate: AnnotateSettings = { active: annotateOpen, tool, color, size };
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black text-white">
@@ -879,7 +858,6 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
       <div
         className="relative flex-1 overflow-hidden bg-black"
         onClick={() => {
-          if (annotateOpen) return;
           setBarOpen((v) => !v);
         }}
       >
@@ -951,8 +929,6 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
           </div>
         )}
       </div>
-
-      {/* Annotate toolbar (mirrors PremiumReader) */}
 
       {/* View Mode panel */}
       {viewOpen && (
@@ -1030,7 +1006,7 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
             </button>
             <PageSearch total={Math.max(1, numPages)} onGo={(p) => setPage(p)} />
             <button
-              onClick={(e) => { e.stopPropagation(); setViewOpen(true); setAnnotateOpen(false); }}
+              onClick={(e) => { e.stopPropagation(); setViewOpen(true); }}
               className="flex shrink-0 items-center gap-1 rounded-full bg-white/10 px-3 py-2 text-[11px] font-semibold"
             >
               <Settings2 className="h-3.5 w-3.5" /> View
@@ -1096,6 +1072,17 @@ function PageSearch({ total, onGo }: { total: number; onGo: (page: number) => vo
 
 
 
+
+/** PageStage — a single placeholder page rendered on the dark reader backdrop. */
+function PageStage({ page, nightModeFilter }: { page: number; nightModeFilter: string }) {
+  return (
+    <div className="relative" style={{ width: "min(100%, 28rem)", aspectRatio: "3 / 4" }}>
+      <div className="absolute inset-0" style={{ filter: nightModeFilter }}>
+        <PageCard page={page} />
+      </div>
+    </div>
+  );
+}
 
 function PageCard({ page }: { page: number }) {
   return (
