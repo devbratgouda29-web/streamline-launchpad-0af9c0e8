@@ -34,6 +34,14 @@ type Props = {
   name?: string;
   /** Tailwind classes controlling the outer container height. */
   className?: string;
+  /**
+   * How the page is scaled inside the container.
+   *  - "width"   (default): fit to container width, scroll vertically.
+   *  - "contain": fit the WHOLE page inside the container box (width AND
+   *    height) and center it — used by horizontal / page-by-page mode so the
+   *    page is never cropped and never collapses to a blank area.
+   */
+  fit?: "width" | "contain";
   /** When true, hides the internal Prev / page / Next bar. */
   hideControls?: boolean;
   /** Controlled page (1-based). Overrides internal state when provided. */
