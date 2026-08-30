@@ -1,4 +1,5 @@
 import { IS_TESTING_MODE } from "@/lib/testing-mode";
+import { loadPdfjs } from "@/lib/pdf-engine";
 import { supabase } from "@/integrations/supabase/client";
 
 /** Language a note is authored in. `both` means the chapter ships both variants. */
@@ -197,12 +198,7 @@ export async function signedPdfUrl(path: string): Promise<string | null> {
 export async function readPdfPageCount(file: File): Promise<number | null> {
   if (typeof window === "undefined") return null;
   try {
-    const [lib, workerMod] = await Promise.all([
-      import("pdfjs-dist"),
-      import("pdfjs-dist/build/pdf.worker.min.mjs?url"),
-    ]);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (lib as any).GlobalWorkerOptions.workerSrc = (workerMod as any).default;
+    const lib = await loadPdfjs();
     const buf = await file.arrayBuffer();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const doc = await (lib as any).getDocument({ data: buf }).promise;
