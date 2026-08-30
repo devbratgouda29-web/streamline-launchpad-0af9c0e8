@@ -103,9 +103,13 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
     });
   };
   const [loading, setLoading] = useState(true);
+  const [rendering, setRendering] = useState(true);
   const [error, setError] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const docRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderTaskRef = useRef<any>(null);
+
 
 
   // Load document.
