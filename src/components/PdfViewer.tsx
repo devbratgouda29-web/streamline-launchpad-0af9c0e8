@@ -34,6 +34,14 @@ type Props = {
   name?: string;
   /** Tailwind classes controlling the outer container height. */
   className?: string;
+  /**
+   * How the page is scaled inside the container.
+   *  - "width"   (default): fit to container width, scroll vertically.
+   *  - "contain": fit the WHOLE page inside the container box (width AND
+   *    height) and center it — used by horizontal / page-by-page mode so the
+   *    page is never cropped and never collapses to a blank area.
+   */
+  fit?: "width" | "contain";
   /** When true, hides the internal Prev / page / Next bar. */
   hideControls?: boolean;
   /** Controlled page (1-based). Overrides internal state when provided. */
@@ -89,7 +97,7 @@ function toGetDocumentParams(
  * PDFs is unreliable or blocked. Falls back to a download button on parse
  * failure.
  */
-export function PdfViewer({ src, name, className, hideControls, page: pageProp, onNumPages, onPageChange }: Props) {
+export function PdfViewer({ src, name, className, fit = "width", hideControls, page: pageProp, onNumPages, onPageChange }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [numPages, setNumPages] = useState(0);
   const [pageInner, setPageInner] = useState(1);
@@ -147,6 +155,24 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
   }, [src]);
 
 
+  // Re-render the page whenever the container box changes (e.g. switching
+  // between horizontal and vertical reading modes, rotation, resize).
+  const [sizeTick, setSizeTick] = useState(0);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || typeof ResizeObserver === "undefined") return;
+    let last = { w: 0, h: 0 };
+    const ro = new ResizeObserver(() => {
+      const w = Math.round(container.clientWidth);
+      const h = Math.round(container.clientHeight);
+      if (Math.abs(w - last.w) < 2 && Math.abs(h - last.h) < 2) return;
+      last = { w, h };
+      setSizeTick((t) => t + 1);
+    });
+    ro.observe(container);
+    return () => ro.disconnect();
+  }, [numPages]);
+
   // Render current page.
   useEffect(() => {
     if (!docRef.current || !numPages) return;
@@ -160,18 +186,30 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
         const pageObj = await doc.getPage(page);
         if (cancelled) return;
         const containerWidth = container.clientWidth || 320;
+        const containerHeight = container.clientHeight || 0;
         const unscaled = pageObj.getViewport({ scale: 1 });
-        // Scale so the page fits container width; cap DPR at 2 for perf.
-        const scale = containerWidth / unscaled.width;
+        // "width" fits the page to the container width (vertical scrolling).
+        // "contain" fits the entire page inside the box so nothing is cropped.
+        const widthScale = containerWidth / unscaled.width;
+        const scale =
+          fit === "contain" && containerHeight > 0
+            ? Math.min(widthScale, containerHeight / unscaled.height)
+            : widthScale;
         const dpr = Math.min(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1, 2);
         const viewport = pageObj.getViewport({ scale });
 
         const canvas = document.createElement("canvas");
         canvas.width = Math.floor(viewport.width * dpr);
         canvas.height = Math.floor(viewport.height * dpr);
-        canvas.style.width = "100%";
-        canvas.style.height = "auto";
+        if (fit === "contain") {
+          canvas.style.width = `${Math.floor(viewport.width)}px`;
+          canvas.style.height = `${Math.floor(viewport.height)}px`;
+        } else {
+          canvas.style.width = "100%";
+          canvas.style.height = "auto";
+        }
         canvas.style.display = "block";
+        canvas.style.margin = "auto";
         const ctx = canvas.getContext("2d");
         if (!ctx) throw new Error("Canvas 2D not available");
         ctx.scale(dpr, dpr);
@@ -187,7 +225,7 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
     })();
 
     return () => { cancelled = true; };
-  }, [page, numPages]);
+  }, [page, numPages, fit, sizeTick]);
 
   if (loading) {
     return (
@@ -221,11 +259,24 @@ export function PdfViewer({ src, name, className, hideControls, page: pageProp, 
   }
 
   return (
-    <div className={"flex flex-col bg-neutral-900 " + (className ?? "")}>
-      <PinchZoomStage className="flex-1 overflow-hidden bg-white">
+    <div
+      className={
+        "flex min-h-0 flex-col " +
+        (fit === "contain" ? "bg-transparent " : "bg-neutral-900 ") +
+        (className ?? "")
+      }
+    >
+      <PinchZoomStage
+        className={
+          "min-h-0 flex-1 overflow-hidden " + (fit === "contain" ? "bg-transparent" : "bg-white")
+        }
+      >
         <div
           ref={containerRef}
-          className="h-full w-full overflow-auto"
+          className={
+            "h-full w-full overflow-auto " +
+            (fit === "contain" ? "flex items-center justify-center" : "")
+          }
           style={{ WebkitOverflowScrolling: "touch" }}
         />
       </PinchZoomStage>
