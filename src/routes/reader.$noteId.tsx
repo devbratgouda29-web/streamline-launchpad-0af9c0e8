@@ -784,7 +784,7 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
     }
   }, [item?.id, item?.dataUrl, item?.kind]);
 
-  const [barOpen, setBarOpen] = useState(true);
+  const [isControlsVisible, setIsControlsVisible] = useState(true);
   const [page, setPage] = useState(1);
   const [numPages, setNumPages] = useState(1);
   const [viewOpen, setViewOpen] = useState(false);
@@ -813,21 +813,23 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
       {/* Top bar */}
       <div
         className={cn(
-          "absolute inset-x-0 top-0 z-20 flex items-center gap-3 bg-gradient-to-b from-black/90 to-transparent px-4 pb-6 pt-3 transition-transform",
-          barOpen ? "translate-y-0" : "-translate-y-full",
+          "absolute inset-x-0 top-0 z-20 flex items-center gap-3 bg-gradient-to-b from-black/90 to-transparent px-4 pb-6 pt-3 transition-all duration-300 ease-out",
+          isControlsVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none",
         )}
       >
         {recall.active && recall.inOvertime && !recall.completed ? (
           <button
             type="button"
-            onClick={recall.finishNow}
+            onClick={(e) => { e.stopPropagation(); recall.finishNow(); }}
             className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-emerald-300/60 bg-emerald-500/25 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-50 shadow-lg backdrop-blur hover:bg-emerald-500/40"
           >
             <Sparkles className="h-3.5 w-3.5" /> Finish &amp; Claim Reward
           </button>
         ) : null}
         {recall.active ? (
-          <RecallTimerBadge sourceId={noteId} onClaim={recall.claim} />
+          <div onClick={(e) => e.stopPropagation()}>
+            <RecallTimerBadge sourceId={noteId} onClaim={recall.claim} />
+          </div>
         ) : null}
 
         <div className="min-w-0 flex-1">
@@ -841,15 +843,12 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
       {/* Canvas / Page area — centered stage on dark backdrop, matches PremiumReader */}
       <div
         className="relative flex-1 overflow-hidden bg-black"
-        onClick={() => {
-          setBarOpen((v) => !v);
-        }}
+        onClick={() => setIsControlsVisible((v) => !v)}
       >
         {isPdf ? (
           direction === "vertical" ? (
             <div
               className="absolute inset-0 overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
             >
               <div
                 className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 p-4"
@@ -876,7 +875,6 @@ function DeskReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
             <div className="absolute inset-0 flex snap-x snap-mandatory items-center overflow-x-auto p-4">
               <div
                 className="relative mx-auto flex h-full w-full max-w-3xl shrink-0 snap-center items-center justify-center"
-                onClick={(e) => e.stopPropagation()}
                 style={{ filter: nightModeFilter }}
               >
                 <PdfViewer
