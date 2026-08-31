@@ -43,6 +43,17 @@ import {
   monthlyStudyByWeekSubject,
 } from "@/lib/study-sessions";
 
+function DashboardSkeleton() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="h-10 w-40 animate-pulse rounded-lg bg-secondary" />
+      <div className="h-44 animate-pulse rounded-3xl bg-secondary" />
+      <div className="h-12 animate-pulse rounded-2xl bg-secondary" />
+      <div className="h-64 animate-pulse rounded-2xl bg-secondary" />
+    </div>
+  );
+}
+
 
 const CHAPTER_TIER_META: Record<RevisionItem["tier"], { label: string; color: string }> = {
   1: { label: "Bronze Core", color: "#CD7F32" },
