@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import { Sparkles } from "lucide-react";
 import { TierShieldSVG, tierForLevel, getBadgeAssetUrl } from "./RankShield";
 import { cn } from "@/lib/utils";
 
-export function RankUpCelebration({
+function RankUpCelebrationBase({
   level,
   rankName,
   onDismiss,
@@ -59,7 +59,7 @@ export function RankUpCelebration({
 
         <div
           className={cn("relative animate-scale-in")}
-          style={{ animation: "rankup-float 2.6s ease-in-out infinite" }}
+          style={{ animation: "rankup-float 2.6s ease-in-out infinite", willChange: "transform" }}
         >
           <div
             aria-hidden
@@ -111,10 +111,12 @@ export function RankUpCelebration({
 
       <style>{`
         @keyframes rankup-float {
-          0%, 100% { transform: translateY(0) rotate(-2deg); }
-          50% { transform: translateY(-10px) rotate(2deg); }
+          0%, 100% { transform: translate3d(0,0,0) rotate(-2deg); }
+          50% { transform: translate3d(0,-10px,0) rotate(2deg); }
         }
       `}</style>
     </div>
   );
 }
+
+export const RankUpCelebration = memo(RankUpCelebrationBase);
