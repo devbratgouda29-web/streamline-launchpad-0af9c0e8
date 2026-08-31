@@ -29,16 +29,16 @@ export const Route = createFileRoute("/_app/discipline/alarm")({
 type Track = { label: string; src: string };
 
 const TRACKS: Track[] = [
-  { label: "Coffin Dance Meme Music", src: "/audio/coffin_dance.mp3" },
+  { label: "Coffin Dance Meme Music", src: "/audio/coffin-dance.mp3" },
   { label: "Godzilla's Roar", src: "/audio/godzilla.mp3" },
-  { label: "GTA San Andreas Theme", src: "/audio/gta_sa.mp3" },
+  { label: "GTA San Andreas Theme", src: "/audio/gta-san-andreas.mp3" },
   { label: "John Cena Entry Theme", src: "/audio/john_cena.mp3" },
   { label: "Man Of Steel", src: "/audio/man_of_steel.mp3" },
   { label: "Mortal Kombat", src: "/audio/mortal_kombat.mp3" },
-  { label: "Super Mario Bros.", src: "/audio/super_mario.mp3" },
+  { label: "Super Mario Bros.", src: "/audio/mario-bros.mp3" },
   { label: "THE BATMAN Theme", src: "/audio/the_batman.mp3" },
   { label: "Transformers Prime", src: "/audio/transformers_prime.mp3" },
-  { label: "Transformers", src: "/audio/Transformers.mp3" },
+  { label: "Transformers", src: "/audio/transformers.mp3" },
   { label: "Wonder Woman", src: "/audio/wonder_woman.mp3" },
 ];
 
