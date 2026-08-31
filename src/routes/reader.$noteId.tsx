@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, lazy, Suspense } from "react";
 import {
   ArrowLeft,
   ChevronLeft,
@@ -15,7 +15,8 @@ import { RecallTimerBadge } from "@/components/RecallTimerBadge";
 import { TierBadge } from "@/components/TierBadge";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { ReviewsSection } from "@/components/ReviewsSection";
+// Reviews are only mounted when the sheet opens — keep them out of the reader bundle.
+const ReviewsSection = lazy(() => import("@/components/ReviewsSection").then((m) => ({ default: m.ReviewsSection })));
 import { getDeskItem, type DeskItem } from "@/lib/desk-store";
 import {
   advanceOnClaim,
@@ -748,7 +749,9 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
                 Close
               </button>
             </div>
-            <ReviewsSection noteId={noteId} />
+            <Suspense fallback={<div className="py-8 text-center text-sm text-muted-foreground">Loading reviews…</div>}>
+              <ReviewsSection noteId={noteId} />
+            </Suspense>
           </div>
         </div>
       )}
