@@ -67,6 +67,7 @@ type ChapterNote = {
   tag: string;
   price: number;
   isFree: boolean;
+  coverImageUrl: string | null;
 };
 
 /** Reduces a "Physics · 12" style label down to just the subject name. */
@@ -160,6 +161,7 @@ function HomePage() {
     tag: n.subject || "Notes",
     price: n.is_free ? 0 : n.price_inr,
     isFree: n.is_free,
+    coverImageUrl: n.cover_image_url ?? null,
   }));
 
   const subjectFilters = ["All", "Botany", "Zoology"];
@@ -361,8 +363,20 @@ function HomePage() {
               className="group rounded-2xl bg-card p-3 ring-1 ring-border transition-transform active:scale-[0.98]"
             >
               <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-crimson-gradient">
+                {n.coverImageUrl && (
+                  <>
+                    <img
+                      src={n.coverImageUrl}
+                      alt=""
+                      loading="lazy"
+                      draggable={false}
+                      className="absolute inset-0 h-full w-full select-none object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/40" />
+                  </>
+                )}
                 <div className="absolute inset-0 flex items-end p-3">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground/80">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground/90 drop-shadow">
                     {n.tag}
                   </span>
                 </div>
