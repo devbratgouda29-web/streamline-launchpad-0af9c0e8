@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-r
 import { useEffect, useMemo, useState, lazy, Suspense } from "react";
 import { ArrowLeft, BookOpen, Check, Loader2, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ReviewsSection } from "@/components/ReviewsSection";
+const ReviewsSection = lazy(() => import("@/components/ReviewsSection").then((m) => ({ default: m.ReviewsSection })));
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SamplePagesGallery } from "@/components/SamplePagesGallery";
 // Sample-page previewer pulls in image-heavy UI — load on demand.
@@ -272,7 +272,9 @@ function NoteDetailPage() {
         </Suspense>
       )}
 
-      <ReviewsSection noteId={noteId} />
+      <Suspense fallback={<div className="py-8 text-center text-sm text-muted-foreground">Loading reviews…</div>}>
+        <ReviewsSection noteId={noteId} />
+      </Suspense>
     </div>
   );
 }
