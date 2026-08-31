@@ -151,6 +151,7 @@ function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
   const [file, setFile] = useState<File | null>(null);
   const [fileEn, setFileEn] = useState<File | null>(null);
   const [concepts, setConcepts] = useState("");
+  const [coverImageUrl, setCoverImageUrl] = useState("");
   const [previewFiles, setPreviewFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -195,6 +196,7 @@ function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
         subject: subject.trim(),
         description: description.trim(),
         thumbnail_url: null,
+        cover_image_url: coverImageUrl.trim() || null,
         price_inr: isFree ? 0 : Number(price) || 0,
         is_free: isFree,
         is_pro: isPro,
@@ -219,6 +221,7 @@ function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
       setFile(null);
       setFileEn(null);
       setConcepts("");
+      setCoverImageUrl("");
       setPreviewFiles([]);
       formEl.reset();
       setMsg("Chapter published to the Library.");
@@ -349,6 +352,23 @@ function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
         </label>
       )}
 
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="card-cover-wallpaper"
+          className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground"
+        >
+          <ImageIcon className="h-3.5 w-3.5 text-accent-amber" /> Card Cover Wallpaper
+        </label>
+        <input
+          id="card-cover-wallpaper"
+          className={inputCls}
+          type="url"
+          placeholder="https://… (leave blank for the default red gradient)"
+          value={coverImageUrl}
+          onChange={(e) => setCoverImageUrl(e.target.value)}
+        />
+      </div>
+
       <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-border px-3 py-2 text-xs text-muted-foreground">
         <ImageIcon className="h-4 w-4" />
         {previewFiles.length > 0
@@ -404,6 +424,7 @@ function NoteRow({ note, sales, onDone }: { note: Note; sales: number; onDone: (
   const [language, setLanguage] = useState<NoteLanguage>(note.language);
   const [enFile, setEnFile] = useState<File | null>(null);
   const [concepts, setConcepts] = useState(note.concepts ?? "");
+  const [coverImageUrl, setCoverImageUrl] = useState(note.cover_image_url ?? "");
   const [previewFiles, setPreviewFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
 
@@ -429,6 +450,7 @@ function NoteRow({ note, sales, onDone }: { note: Note; sales: number; onDone: (
       is_pro: isPro,
       language,
       concepts: concepts.trim() || null,
+      cover_image_url: coverImageUrl.trim() || null,
       ...(newPreviews.length > 0
         ? { preview_images: [...existingPreviews, ...newPreviews].slice(0, 8) }
         : {}),
@@ -464,6 +486,16 @@ function NoteRow({ note, sales, onDone }: { note: Note; sales: number; onDone: (
             placeholder={"Coulomb's Law\nElectric field & dipoles\nGauss's Law applications"}
             value={concepts}
             onChange={(e) => setConcepts(e.target.value)}
+          />
+        </label>
+        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+          Card Cover Wallpaper
+          <input
+            type="url"
+            className={cn(inputCls, "mt-1 font-normal normal-case tracking-normal")}
+            placeholder="https://… (blank = red gradient)"
+            value={coverImageUrl}
+            onChange={(e) => setCoverImageUrl(e.target.value)}
           />
         </label>
         <label className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-dashed border-border px-2.5 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
