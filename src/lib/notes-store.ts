@@ -13,6 +13,8 @@ export type Note = {
   subject: string;
   description: string | null;
   thumbnail_url: string | null;
+  /** Optional full-bleed wallpaper shown behind the note card. */
+  cover_image_url: string | null;
   price_inr: number;
   is_free: boolean;
   is_pro: boolean;
@@ -36,7 +38,7 @@ export type Note = {
 };
 
 const COLUMNS =
-  "id, title, subject, description, thumbnail_url, price_inr, is_free, is_pro, pdf_path, pdf_path_en, language, pair_note_id, preview_images, concepts, page_count, page_count_en, hidden, created_at";
+  "id, title, subject, description, thumbnail_url, cover_image_url, price_inr, is_free, is_pro, pdf_path, pdf_path_en, language, pair_note_id, preview_images, concepts, page_count, page_count_en, hidden, created_at";
 
 export async function listNotes(includeHidden = false): Promise<Note[]> {
   let query = supabase.from("notes").select(COLUMNS).order("created_at", { ascending: false });
@@ -118,6 +120,7 @@ export type NoteDraft = {
   subject: string;
   description: string;
   thumbnail_url: string | null;
+  cover_image_url?: string | null;
   price_inr: number;
   is_free: boolean;
   is_pro: boolean;
