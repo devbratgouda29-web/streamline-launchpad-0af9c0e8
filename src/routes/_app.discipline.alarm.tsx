@@ -34,11 +34,11 @@ const TRACKS: Track[] = [
   { label: "GTA San Andreas Theme", src: "/audio/gta-san-andreas.mp3" },
   { label: "John Cena Entry Theme", src: "/audio/john-cena.mp3" },
   { label: "Man Of Steel", src: "/audio/man-of-steel.mp3" },
-  { label: "Mortal Kombat", src: "/audio/mortal_kombat.mp3" },
+  { label: "Mortal Kombat", src: "/audio/mortal-kombat.mp3" },
   { label: "Super Mario Bros.", src: "/audio/mario-bros.mp3" },
   { label: "THE BATMAN Theme", src: "/audio/the-batman.mp3" },
   { label: "Transformers Prime", src: "/audio/transformers-prime.mp3" },
-  { label: "Transformers", src: "/audio/transformers.mp3" },
+  { label: "Transformers", src: "/audio/Transformers.mp3" },
   { label: "Wonder Woman", src: "/audio/wonder-woman.mp3" },
 ];
 
