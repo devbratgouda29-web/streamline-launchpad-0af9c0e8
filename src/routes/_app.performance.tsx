@@ -322,6 +322,9 @@ function PerformancePage() {
         exportLabel={pdfUnlock.label}
         canExport={pdfUnlock.unlocked}
       />
+      </Suspense>
+
+
 
 
       <button
