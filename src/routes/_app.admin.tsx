@@ -14,6 +14,7 @@ import {
   uploadNotePdf,
   uploadPreviewImages,
   type Note,
+  type NoteDivision,
   type NoteLanguage,
 } from "@/lib/notes-store";
 
@@ -134,6 +135,8 @@ function AdminConsole() {
 const inputCls =
   "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent-amber";
 
+const DIVISION_OPTIONS: NoteDivision[] = ["Botany", "Zoology", "General"];
+
 const LANGUAGE_OPTIONS: { value: NoteLanguage; label: string }[] = [
   { value: "hinglish", label: "Hinglish (Hindi + English)" },
   { value: "english", label: "English (Global)" },
@@ -143,6 +146,7 @@ const LANGUAGE_OPTIONS: { value: NoteLanguage; label: string }[] = [
 function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
+  const [division, setDivision] = useState<NoteDivision>("General");
   const [description, setDescription] = useState("");
   const [pageCount, setPageCount] = useState("12");
   const [price, setPrice] = useState("199");
@@ -195,6 +199,7 @@ function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
       await createNote({
         title: title.trim(),
         subject: subject.trim(),
+        division,
         description: description.trim(),
         thumbnail_url: null,
         cover_image_url: coverImageUrl.trim() || null,
@@ -213,6 +218,7 @@ function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
       // before the (slower) catalogue refresh runs.
       setTitle("");
       setSubject("");
+      setDivision("General");
       setDescription("");
       setPageCount("12");
       setPrice("199");
@@ -249,6 +255,27 @@ function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
 
       <input className={inputCls} placeholder="Chapter title" value={title} onChange={(e) => setTitle(e.target.value)} required />
       <input className={inputCls} placeholder="Subject (e.g. Physics · 12)" value={subject} onChange={(e) => setSubject(e.target.value)} />
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="subject-division"
+          className="text-[10px] font-black uppercase tracking-widest text-muted-foreground"
+        >
+          Subject Division
+        </label>
+        <select
+          id="subject-division"
+          className={inputCls}
+          value={division}
+          onChange={(e) => setDivision(e.target.value as NoteDivision)}
+        >
+          {DIVISION_OPTIONS.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <textarea className={cn(inputCls, "min-h-20 resize-y")} placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
 
       <div className="flex flex-col gap-1.5">
@@ -412,6 +439,7 @@ function NoteRow({ note, sales, onDone }: { note: Note; sales: number; onDone: (
   const [isPro, setIsPro] = useState(note.is_pro);
   const [isFree, setIsFree] = useState(note.is_free);
   const [language, setLanguage] = useState<NoteLanguage>(note.language);
+  const [division, setDivision] = useState<NoteDivision>(note.division ?? "General");
   const [enFile, setEnFile] = useState<File | null>(null);
   const [concepts, setConcepts] = useState(note.concepts ?? "");
   const [coverImageUrl, setCoverImageUrl] = useState(note.cover_image_url ?? "");
@@ -439,6 +467,7 @@ function NoteRow({ note, sales, onDone }: { note: Note; sales: number; onDone: (
       is_free: isFree,
       is_pro: isPro,
       language,
+      division,
       concepts: concepts.trim() || null,
       cover_image_url: coverImageUrl.trim() || null,
       ...(newPreviews.length > 0
@@ -477,6 +506,20 @@ function NoteRow({ note, sales, onDone }: { note: Note; sales: number; onDone: (
             value={concepts}
             onChange={(e) => setConcepts(e.target.value)}
           />
+        </label>
+        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+          Subject Division
+          <select
+            className={cn(inputCls, "mt-1 font-normal normal-case tracking-normal")}
+            value={division}
+            onChange={(e) => setDivision(e.target.value as NoteDivision)}
+          >
+            {DIVISION_OPTIONS.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
         </label>
         <CoverWallpaperField
           value={coverImageUrl}
