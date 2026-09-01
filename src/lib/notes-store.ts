@@ -7,10 +7,14 @@ export type NoteLanguage = "hinglish" | "english" | "both";
 /** A language a student can actually read (never `both`). */
 export type ReadableLanguage = "hinglish" | "english";
 
+/** Sub-category shown on the note card. */
+export type NoteDivision = "Botany" | "Zoology" | "General";
+
 export type Note = {
   id: string;
   title: string;
   subject: string;
+  division: NoteDivision;
   description: string | null;
   thumbnail_url: string | null;
   /** Optional full-bleed wallpaper shown behind the note card. */
