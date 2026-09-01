@@ -19,6 +19,7 @@ import {
 
 
 import { getNoteSales } from "@/lib/notes.functions";
+import { CoverWallpaperField } from "@/components/admin/CoverWallpaperField";
 import {
   PurchaseAnalyticsCard,
   ReviewModerationCard,
