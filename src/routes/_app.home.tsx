@@ -362,7 +362,7 @@ function HomePage() {
               params={{ noteId: n.id }}
               className="group rounded-2xl bg-card p-3 ring-1 ring-border transition-transform active:scale-[0.98]"
             >
-              <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-crimson-gradient">
+            <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-crimson-gradient">
                 {n.coverImageUrl && (
                   <>
                     <img
@@ -380,11 +380,8 @@ function HomePage() {
                     {n.tag}
                   </span>
                 </div>
-                <span className="absolute right-2 top-2 rounded-full bg-accent-amber px-2 py-0.5 text-[11px] font-bold text-accent-amber-foreground">
+                <span className="absolute bottom-3 right-3 rounded-full bg-accent-amber px-2 py-0.5 text-[11px] font-bold text-accent-amber-foreground">
                   {n.isFree ? "Free" : `₹${n.price}`}
-                </span>
-                <span className="absolute left-2 top-2 rounded-full bg-background/85 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-foreground ring-1 ring-border">
-                  Visual Layout
                 </span>
               </div>
               <p className="mt-2 truncate text-sm font-semibold">{n.title}</p>
