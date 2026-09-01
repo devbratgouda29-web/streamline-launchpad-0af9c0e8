@@ -19,6 +19,7 @@ import {
 
 
 import { getNoteSales } from "@/lib/notes.functions";
+import { CoverWallpaperField } from "@/components/admin/CoverWallpaperField";
 import {
   PurchaseAnalyticsCard,
   ReviewModerationCard,
@@ -352,22 +353,11 @@ function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
         </label>
       )}
 
-      <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="card-cover-wallpaper"
-          className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground"
-        >
-          <ImageIcon className="h-3.5 w-3.5 text-accent-amber" /> Card Cover Wallpaper
-        </label>
-        <input
-          id="card-cover-wallpaper"
-          className={inputCls}
-          type="url"
-          placeholder="https://… (leave blank for the default red gradient)"
-          value={coverImageUrl}
-          onChange={(e) => setCoverImageUrl(e.target.value)}
-        />
-      </div>
+      <CoverWallpaperField
+        value={coverImageUrl}
+        onChange={setCoverImageUrl}
+        inputCls={inputCls}
+      />
 
       <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-border px-3 py-2 text-xs text-muted-foreground">
         <ImageIcon className="h-4 w-4" />
@@ -488,16 +478,11 @@ function NoteRow({ note, sales, onDone }: { note: Note; sales: number; onDone: (
             onChange={(e) => setConcepts(e.target.value)}
           />
         </label>
-        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-          Card Cover Wallpaper
-          <input
-            type="url"
-            className={cn(inputCls, "mt-1 font-normal normal-case tracking-normal")}
-            placeholder="https://… (blank = red gradient)"
-            value={coverImageUrl}
-            onChange={(e) => setCoverImageUrl(e.target.value)}
-          />
-        </label>
+        <CoverWallpaperField
+          value={coverImageUrl}
+          onChange={setCoverImageUrl}
+          inputCls={inputCls}
+        />
         <label className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-dashed border-border px-2.5 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
           <ImageIcon className="h-3 w-3" />
           {previewFiles.length > 0

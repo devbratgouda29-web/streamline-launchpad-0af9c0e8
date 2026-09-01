@@ -235,3 +235,37 @@ export async function signedPreviewUrls(paths: string[]): Promise<string[]> {
   const { data } = await supabase.storage.from("note-previews").createSignedUrls(paths, 3600);
   return (data ?? []).map((d) => d.signedUrl).filter((u): u is string => Boolean(u));
 }
+
+/**
+ * Reads a picked image file and returns a downscaled `data:image/jpeg;base64,…`
+ * URL suitable for storing directly in `notes.cover_image_url`.
+ */
+export async function fileToCoverDataUrl(file: File, maxWidth = 1200): Promise<string> {
+  if (!file.type.startsWith("image/")) throw new Error("Please choose an image file");
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error("Could not read the image"));
+    reader.readAsDataURL(file);
+  });
+  if (typeof window === "undefined") return dataUrl;
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image();
+      el.onload = () => resolve(el);
+      el.onerror = () => reject(new Error("Invalid image"));
+      el.src = dataUrl;
+    });
+    const scale = Math.min(1, maxWidth / (img.naturalWidth || maxWidth));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round((img.naturalWidth || maxWidth) * scale);
+    canvas.height = Math.round((img.naturalHeight || maxWidth) * scale);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return dataUrl;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const out = canvas.toDataURL("image/jpeg", 0.82);
+    return out.length < dataUrl.length ? out : dataUrl;
+  } catch {
+    return dataUrl;
+  }
+}
