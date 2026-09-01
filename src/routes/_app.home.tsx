@@ -377,17 +377,18 @@ function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/40" />
                   </>
                 )}
-                <div className="absolute inset-0 flex items-end p-3">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground/90 drop-shadow">
-                    {n.division}
-                  </span>
-                </div>
                 <span className="absolute bottom-3 right-3 rounded-full bg-accent-amber px-2 py-0.5 text-[11px] font-bold text-accent-amber-foreground">
                   {n.isFree ? "Free" : `₹${n.price}`}
                 </span>
               </div>
               <p className="mt-2 truncate text-sm font-semibold">{n.title}</p>
-              <p className="truncate text-[11px] text-muted-foreground">{n.tag}</p>
+              <div className="flex items-center justify-between text-[11px] text-muted-foreground gap-2">
+  <span className="truncate">{n.tag}</span>
+  <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-accent-amber font-mono">
+    {n.division}
+  </span>
+</div>
+
             </Link>
           ))}
         </div>
