@@ -20,6 +20,7 @@ export type Database = {
           cover_image_url: string | null
           created_at: string
           description: string | null
+          division: string
           hidden: boolean
           id: string
           is_free: boolean
@@ -42,6 +43,7 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           description?: string | null
+          division?: string
           hidden?: boolean
           id?: string
           is_free?: boolean
@@ -64,6 +66,7 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           description?: string | null
+          division?: string
           hidden?: boolean
           id?: string
           is_free?: boolean

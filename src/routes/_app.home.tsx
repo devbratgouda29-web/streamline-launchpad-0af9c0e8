@@ -66,6 +66,7 @@ type ChapterNote = {
   title: string;
   tag: string;
   price: number;
+  division?: string;
   isFree: boolean;
   coverImageUrl: string | null;
 };
@@ -159,6 +160,7 @@ function HomePage() {
     id: n.id,
     title: n.title,
     tag: n.subject || "Notes",
+    division: n.division ?? "General",
     price: n.is_free ? 0 : n.price_inr,
     isFree: n.is_free,
     coverImageUrl: n.cover_image_url ?? null,
@@ -377,7 +379,7 @@ function HomePage() {
                 )}
                 <div className="absolute inset-0 flex items-end p-3">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground/90 drop-shadow">
-                    {n.tag}
+                    {n.division}
                   </span>
                 </div>
                 <span className="absolute bottom-3 right-3 rounded-full bg-accent-amber px-2 py-0.5 text-[11px] font-bold text-accent-amber-foreground">
