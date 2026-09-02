@@ -64,10 +64,9 @@ function Drum({
           if (i !== index) onIndex(i);
         }, 80);
       }}
-      className="h-[132px] w-full snap-y snap-mandatory overflow-y-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      style={{ scrollPaddingTop: ITEM_H }}
+      className="h-[132px] w-full snap-y snap-mandatory overflow-y-auto py-[44px] scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+
     >
-      <div style={{ height: ITEM_H }} aria-hidden />
       {items.map((it, i) => (
         <button
           key={it}
@@ -86,7 +85,7 @@ function Drum({
           {it}
         </button>
       ))}
-      <div style={{ height: ITEM_H }} aria-hidden />
+      
     </div>
   );
 }
