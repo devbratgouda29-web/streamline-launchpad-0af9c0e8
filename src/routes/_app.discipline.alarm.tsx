@@ -11,6 +11,8 @@ import {
   Pause,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TimeDrumPicker } from "@/components/TimeDrumPicker";
+import { DisciplineTimeNav } from "@/components/DisciplineTimeNav";
 
 export const Route = createFileRoute("/_app/discipline/alarm")({
   head: () => ({
@@ -264,6 +266,8 @@ function AlarmPage() {
         </div>
       </header>
 
+      <DisciplineTimeNav />
+
       {/* Live system clock */}
       <div className="rounded-2xl border border-border bg-card p-5 text-center">
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
@@ -293,17 +297,12 @@ function AlarmPage() {
         </div>
 
         <div className="mt-5 flex flex-col gap-4">
-          <label className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
               Wake-up time
             </span>
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="rounded-xl border border-border bg-background px-4 py-3 font-mono text-2xl tabular-nums text-foreground outline-none focus:border-accent-amber"
-            />
-          </label>
+            <TimeDrumPicker value={time} onChange={setTime} />
+          </div>
 
           <div className="flex flex-col gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">

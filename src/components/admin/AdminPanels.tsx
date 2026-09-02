@@ -15,6 +15,7 @@ import {
 import { bypassAllTimers, getAllItems, getFracturedItems, restoreItem, setDisplayTier, type RevisionItem } from "@/lib/revision-engine";
 import { addStudySession, type StudySubject } from "@/lib/study-sessions";
 import { IS_TESTING_MODE } from "@/lib/testing-mode";
+import { StyledSelect } from "@/components/StyledSelect";
 import { cn } from "@/lib/utils";
 
 const card = "flex flex-col gap-3 rounded-2xl bg-card p-4 ring-1 ring-border";
@@ -339,17 +340,16 @@ export function TestingToolsCard() {
         </label>
         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
           Subject
-          <select
-            value={subject}
-            onChange={(e) => setSubject(e.target.value as StudySubject)}
-            className="mt-1 block w-40 rounded-lg bg-muted px-2 py-1.5 text-sm font-normal text-foreground"
-          >
-            {(["Physics", "Chemistry", "Math/Bio", "Other"] as StudySubject[]).map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
+          <div className="mt-1 w-40">
+            <StyledSelect
+              ariaLabel="Subject"
+              value={subject}
+              options={(["Physics", "Chemistry", "Math/Bio", "Other"] as StudySubject[]).map(
+                (s) => ({ value: s, label: s }),
+              )}
+              onChange={(v) => setSubject(v)}
+            />
+          </div>
         </label>
         <button
           type="button"

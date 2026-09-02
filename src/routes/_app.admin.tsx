@@ -20,6 +20,7 @@ import {
 
 
 import { getNoteSales } from "@/lib/notes.functions";
+import { StyledSelect } from "@/components/StyledSelect";
 import { CoverWallpaperField } from "@/components/admin/CoverWallpaperField";
 import {
   PurchaseAnalyticsCard,
@@ -262,18 +263,12 @@ function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
         >
           Subject Division
         </label>
-        <select
-          id="subject-division"
-          className={inputCls}
+        <StyledSelect
+          ariaLabel="Subject Division"
           value={division}
-          onChange={(e) => setDivision(e.target.value as NoteDivision)}
-        >
-          {DIVISION_OPTIONS.map((d) => (
-            <option key={d} value={d}>
-              {d}
-            </option>
-          ))}
-        </select>
+          options={DIVISION_OPTIONS.map((d) => ({ value: d, label: d }))}
+          onChange={(v) => setDivision(v)}
+        />
       </div>
 
       <textarea className={cn(inputCls, "min-h-20 resize-y")} placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
@@ -318,18 +313,12 @@ function UploadForm({ onDone }: { onDone: () => Promise<void> }) {
         >
           <Languages className="h-3.5 w-3.5 text-accent-amber" /> Language Target
         </label>
-        <select
-          id="language-target"
-          className={inputCls}
+        <StyledSelect
+          ariaLabel="Language Target"
           value={language}
-          onChange={(e) => setLanguage(e.target.value as NoteLanguage)}
-        >
-          {LANGUAGE_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
+          options={LANGUAGE_OPTIONS}
+          onChange={(v) => setLanguage(v)}
+        />
       </div>
 
       <div className="flex items-center gap-3">
@@ -509,17 +498,14 @@ function NoteRow({ note, sales, onDone }: { note: Note; sales: number; onDone: (
         </label>
         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
           Subject Division
-          <select
-            className={cn(inputCls, "mt-1 font-normal normal-case tracking-normal")}
-            value={division}
-            onChange={(e) => setDivision(e.target.value as NoteDivision)}
-          >
-            {DIVISION_OPTIONS.map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
+          <div className="mt-1">
+            <StyledSelect
+              ariaLabel="Subject Division"
+              value={division}
+              options={DIVISION_OPTIONS.map((d) => ({ value: d, label: d }))}
+              onChange={(v) => setDivision(v)}
+            />
+          </div>
         </label>
         <CoverWallpaperField
           value={coverImageUrl}
@@ -551,18 +537,13 @@ function NoteRow({ note, sales, onDone }: { note: Note; sales: number; onDone: (
           className={cn(inputCls, "w-24 py-1.5")}
           aria-label={`Price for ${note.title}`}
         />
-        <select
+        <StyledSelect
+          ariaLabel={`Language for ${note.title}`}
           value={language}
-          onChange={(e) => setLanguage(e.target.value as NoteLanguage)}
-          className={cn(inputCls, "w-44 py-1.5")}
-          aria-label={`Language for ${note.title}`}
-        >
-          {LANGUAGE_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
+          options={LANGUAGE_OPTIONS}
+          onChange={(v) => setLanguage(v)}
+          className="w-44 py-1.5"
+        />
         <label className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-dashed border-border px-2.5 py-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
           <FileText className="h-3 w-3" />
           {enFile ? enFile.name : note.pdf_path_en ? "Replace English PDF" : "Add English PDF"}
