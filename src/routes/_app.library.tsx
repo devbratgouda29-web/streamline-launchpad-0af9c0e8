@@ -238,11 +238,18 @@ function LibraryPage() {
             return (
             <li key={n.id} className="rounded-2xl bg-card p-3 pt-2 ring-1 ring-border">
               <div className="flex gap-3">
-                <div className="relative h-24 w-20 shrink-0 translate-y-2 overflow-hidden rounded-xl bg-crimson-gradient">
-                  <span className="absolute right-1 top-1 rounded-full bg-accent-amber px-1.5 py-0.5 text-[9px] font-bold text-accent-amber-foreground">
-                    OWNED
-                  </span>
-                </div>
+                <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-xl bg-muted">
+  <img
+    src={n.note.cover_url || n.note.thumbnail_url}
+    alt={n.title}
+    className="h-full w-full object-cover"
+  />
+</div>
+
+                  
+                  
+                  
+                
                 <div className="flex min-w-0 flex-1 flex-col justify-between">
                   <div>
                     <p className="min-w-0 truncate text-sm font-semibold">{n.title}</p>
