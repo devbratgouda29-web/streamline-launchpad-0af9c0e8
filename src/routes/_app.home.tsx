@@ -172,7 +172,7 @@ function HomePage() {
     subject === "All"
       ? cards
       : cards.filter((c) =>
-          (c.tag + " " + subjectGroup(c.tag)).toLowerCase().includes(subject.toLowerCase()),
+          c.division?.toLowerCase() === subject.toLowerCase()
         );
 
   const filteredNotes = query.trim()
