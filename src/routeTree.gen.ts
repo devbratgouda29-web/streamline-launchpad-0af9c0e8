@@ -27,6 +27,7 @@ import { Route as AppDisciplineAlarmRouteImport } from './routes/_app.discipline
 import { Route as AppDisciplineFocusRouteImport } from './routes/_app.discipline.focus'
 import { Route as AppDisciplineHabitsRouteImport } from './routes/_app.discipline.habits'
 import { Route as AppDisciplineMissionRouteImport } from './routes/_app.discipline.mission'
+import { Route as AppDisciplineStopwatchRouteImport } from './routes/_app.discipline.stopwatch'
 import { Route as AppDisciplineWarCouncilRouteImport } from './routes/_app.discipline.war-council'
 import { Route as AppNotesNoteIdRouteImport } from './routes/_app.notes.$noteId'
 
@@ -119,6 +120,11 @@ const AppDisciplineMissionRoute = AppDisciplineMissionRouteImport.update({
   path: '/mission',
   getParentRoute: () => AppDisciplineRoute,
 } as any)
+const AppDisciplineStopwatchRoute = AppDisciplineStopwatchRouteImport.update({
+  id: '/stopwatch',
+  path: '/stopwatch',
+  getParentRoute: () => AppDisciplineRoute,
+} as any)
 const AppDisciplineWarCouncilRoute = AppDisciplineWarCouncilRouteImport.update({
   id: '/war-council',
   path: '/war-council',
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/discipline/focus': typeof AppDisciplineFocusRoute
   '/discipline/habits': typeof AppDisciplineHabitsRoute
   '/discipline/mission': typeof AppDisciplineMissionRoute
+  '/discipline/stopwatch': typeof AppDisciplineStopwatchRoute
   '/discipline/war-council': typeof AppDisciplineWarCouncilRoute
   '/notes/$noteId': typeof AppNotesNoteIdRoute
   '/discipline/': typeof AppDisciplineIndexRoute
@@ -167,6 +174,7 @@ export interface FileRoutesByTo {
   '/discipline/focus': typeof AppDisciplineFocusRoute
   '/discipline/habits': typeof AppDisciplineHabitsRoute
   '/discipline/mission': typeof AppDisciplineMissionRoute
+  '/discipline/stopwatch': typeof AppDisciplineStopwatchRoute
   '/discipline/war-council': typeof AppDisciplineWarCouncilRoute
   '/notes/$noteId': typeof AppNotesNoteIdRoute
   '/discipline': typeof AppDisciplineIndexRoute
@@ -190,6 +198,7 @@ export interface FileRoutesById {
   '/_app/discipline/focus': typeof AppDisciplineFocusRoute
   '/_app/discipline/habits': typeof AppDisciplineHabitsRoute
   '/_app/discipline/mission': typeof AppDisciplineMissionRoute
+  '/_app/discipline/stopwatch': typeof AppDisciplineStopwatchRoute
   '/_app/discipline/war-council': typeof AppDisciplineWarCouncilRoute
   '/_app/notes/$noteId': typeof AppNotesNoteIdRoute
   '/_app/discipline/': typeof AppDisciplineIndexRoute
@@ -213,6 +222,7 @@ export interface FileRouteTypes {
     | '/discipline/focus'
     | '/discipline/habits'
     | '/discipline/mission'
+    | '/discipline/stopwatch'
     | '/discipline/war-council'
     | '/notes/$noteId'
     | '/discipline/'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/discipline/focus'
     | '/discipline/habits'
     | '/discipline/mission'
+    | '/discipline/stopwatch'
     | '/discipline/war-council'
     | '/notes/$noteId'
     | '/discipline'
@@ -255,6 +266,7 @@ export interface FileRouteTypes {
     | '/_app/discipline/focus'
     | '/_app/discipline/habits'
     | '/_app/discipline/mission'
+    | '/_app/discipline/stopwatch'
     | '/_app/discipline/war-council'
     | '/_app/notes/$noteId'
     | '/_app/discipline/'
@@ -398,6 +410,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDisciplineMissionRouteImport
       parentRoute: typeof AppDisciplineRoute
     }
+    '/_app/discipline/stopwatch': {
+      id: '/_app/discipline/stopwatch'
+      path: '/stopwatch'
+      fullPath: '/discipline/stopwatch'
+      preLoaderRoute: typeof AppDisciplineStopwatchRouteImport
+      parentRoute: typeof AppDisciplineRoute
+    }
     '/_app/discipline/war-council': {
       id: '/_app/discipline/war-council'
       path: '/war-council'
@@ -420,6 +439,7 @@ interface AppDisciplineRouteChildren {
   AppDisciplineFocusRoute: typeof AppDisciplineFocusRoute
   AppDisciplineHabitsRoute: typeof AppDisciplineHabitsRoute
   AppDisciplineMissionRoute: typeof AppDisciplineMissionRoute
+  AppDisciplineStopwatchRoute: typeof AppDisciplineStopwatchRoute
   AppDisciplineWarCouncilRoute: typeof AppDisciplineWarCouncilRoute
   AppDisciplineIndexRoute: typeof AppDisciplineIndexRoute
 }
@@ -429,6 +449,7 @@ const AppDisciplineRouteChildren: AppDisciplineRouteChildren = {
   AppDisciplineFocusRoute: AppDisciplineFocusRoute,
   AppDisciplineHabitsRoute: AppDisciplineHabitsRoute,
   AppDisciplineMissionRoute: AppDisciplineMissionRoute,
+  AppDisciplineStopwatchRoute: AppDisciplineStopwatchRoute,
   AppDisciplineWarCouncilRoute: AppDisciplineWarCouncilRoute,
   AppDisciplineIndexRoute: AppDisciplineIndexRoute,
 }
