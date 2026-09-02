@@ -244,9 +244,13 @@ function LibraryPage() {
               <div className="flex gap-3">
                 <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-xl bg-muted">
                   <img
-                    src={n.note.cover_url}
-                    alt=""
+                    src={n.note.cover_url || "/placeholder.svg"}
+                    alt={n.title}
                     className="h-full w-full object-cover"
+                    onError={(e) => {
+                      // Fallback if the database URL is missing, invalid, or broken
+                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='133' viewBox='0 0 100 133'%3E%3Crect width='100%25' height='100%25' fill='%2327272a'/%3E%3Ctext x='50%25' y='50%25' fill='%23a1a1aa' font-size='10' text-anchor='middle' dy='.3em'%3ENo Cover%3E%2Ftext%3E%3C%2Fsvg%3E";
+                    }}
                   />
                 </div>                
                 <div className="flex min-w-0 flex-1 flex-col justify-between">
