@@ -239,17 +239,12 @@ function LibraryPage() {
             <li key={n.id} className="rounded-2xl bg-card p-3 pt-2 ring-1 ring-border">
               <div className="flex gap-3">
                 <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-xl bg-muted">
-  <img
-    src={n.note.cover_url || n.note.thumbnail_url}
-    alt={n.title}
-    className="h-full w-full object-cover"
-  />
-</div>
-
-                  
-                  
-                  
-                
+                  <img
+                    src={n.note.thumbnail_url || n.note.cover_url || ""}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                </div>                
                 <div className="flex min-w-0 flex-1 flex-col justify-between">
                   <div>
                     <p className="min-w-0 truncate text-sm font-semibold">{n.title}</p>
