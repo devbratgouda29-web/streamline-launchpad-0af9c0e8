@@ -240,7 +240,7 @@ function LibraryPage() {
               <div className="flex gap-3">
                 <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-xl bg-muted">
                   <img
-                    src={n.note.thumbnail_url || n.note.cover_url || ""}
+                    src={(n.note as any).coverUrl || (n.note as any).thumbnailUrl || (n.note as any).cover_url || (n.note as any).thumbnail_url || (n.note as any).coverImage || "/placeholder.svg"}
                     alt=""
                     className="h-full w-full object-cover"
                   />
