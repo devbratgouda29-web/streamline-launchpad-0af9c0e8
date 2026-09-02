@@ -237,21 +237,26 @@ function LibraryPage() {
             const pct = item ? progressPct(item, now) : 0;
             // Shield ALWAYS reflects the most recently CLAIMED badge. No badge
             // is shown until the user completes a recall session and claims it.
-            const shieldTier = item?.displayTier as TierNumber | undefined;
+            const shieldTier = (item?.tier ?? item?.displayTier) as TierNumber | undefined;
             const shieldLoop = item?.displayLoopCount ?? 0;
             return (
             <li key={n.id} className="rounded-2xl bg-card p-3 pt-2 ring-1 ring-border">
               <div className="flex gap-3">
                 <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-xl bg-muted">
-                  <img
-                    src={n.note.cover_url || "/placeholder.svg"}
-                    alt={n.title}
-                    className="h-full w-full object-cover"
-                    onError={(e) => {
-                      // Fallback if the database URL is missing, invalid, or broken
-                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='133' viewBox='0 0 100 133'%3E%3Crect width='100%25' height='100%25' fill='%2327272a'/%3E%3Ctext x='50%25' y='50%25' fill='%23a1a1aa' font-size='10' text-anchor='middle' dy='.3em'%3ENo Cover%3E%2Ftext%3E%3C%2Fsvg%3E";
-                    }}
-                  />
+                  {n.note.cover_url ? (
+                    <img
+                      src={n.note.cover_url}
+                      alt=""
+                      className="h-full w-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <div className="grid h-full w-full place-items-center bg-muted text-[10px] text-muted-foreground">
+                      No Cover
+                    </div>
+                  )}
                 </div>                
                 <div className="flex min-w-0 flex-1 flex-col justify-between">
                   <div>
