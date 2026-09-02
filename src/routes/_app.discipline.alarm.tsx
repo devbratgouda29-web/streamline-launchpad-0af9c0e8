@@ -40,7 +40,7 @@ const TRACKS: Track[] = [
   { label: "Super Mario Bros.", src: "/audio/mario-bros.mp3" },
   { label: "THE BATMAN Theme", src: "/audio/the-batman.mp3" },
   { label: "Transformers Prime", src: "/audio/transformers-prime.mp3" },
-  { label: "Transformers", src: "/audio/Transformers.mp3" },
+  { label: "Transformers", src: "/audio/transformers.mp3" },
   { label: "Wonder Woman", src: "/audio/wonder-woman.mp3" },
 ];
 
