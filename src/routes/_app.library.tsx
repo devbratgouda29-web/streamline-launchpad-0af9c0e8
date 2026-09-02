@@ -118,9 +118,13 @@ function LibraryPage() {
               progress: 0,
               avgRating: s && s.count ? s.sum / s.count : 0,
               reviews: s?.count ?? 0,
-              note: n,
-            };
-          });
+              note: {
+                ...n,
+        // Fallback to placeholder if cover_url is missing or null
+        cover_url: n.cover_url || (n as any).coverUrl || (n as any).thumbnail_url || "/placeholder.svg",
+      },
+    };
+  });
         setAllNotes(notes);
         purchasedRef.current = mapped;
         setPurchased(mapped);
@@ -240,7 +244,7 @@ function LibraryPage() {
               <div className="flex gap-3">
                 <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-xl bg-muted">
                   <img
-                    src={(n.note as any).coverUrl || (n.note as any).thumbnailUrl || (n.note as any).cover_url || (n.note as any).thumbnail_url || (n.note as any).coverImage || "/placeholder.svg"}
+                    src={n.note.cover_url}
                     alt=""
                     className="h-full w-full object-cover"
                   />
