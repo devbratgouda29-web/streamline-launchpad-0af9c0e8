@@ -384,7 +384,7 @@ function LibraryPage() {
                       </span>
                     </div>
                     <p className="mt-2 text-[10px] text-muted-foreground">
-                      Resume to start a fresh loop from Tier 1 (Bronze Core
+                      Resume to start a fresh loop from Level 1 (Bronze Core
                       {item.loopCount ? ` x${(item.loopCount ?? 0) + 1}` : ""}). All earned badges stay.
                     </p>
                     <button
@@ -405,7 +405,7 @@ function LibraryPage() {
                           <Brain className="h-3.5 w-3.5" />
                         </span>
                         <span className="text-[11px] font-bold uppercase tracking-wide text-purple-200">
-                          {item.fractured ? "FRACTURED · Restore required" : `Tracking Active · Tier ${item.displayTier ?? item.tier}/5`}
+                          {item.fractured ? "FRACTURED · Restore required" : `Tracking Active · Level ${item.displayTier ?? item.tier}/5`}
                         </span>
                       </span>
                     </div>
@@ -596,7 +596,7 @@ function LibraryPage() {
                         <div>
                           <div className="flex items-center justify-between text-[11px]">
                             <span className="font-bold uppercase tracking-wide text-purple-200">
-                              {item.fractured ? "FRACTURED" : `Tier ${item.displayTier ?? item.tier}/5`}
+                              {item.fractured ? "FRACTURED" : `Level ${item.displayTier ?? item.tier}/5`}
                             </span>
                             <span className="text-muted-foreground">
                               {item.fractured ? "Restore required" : new Date(item.nextDueAt).toLocaleString()}

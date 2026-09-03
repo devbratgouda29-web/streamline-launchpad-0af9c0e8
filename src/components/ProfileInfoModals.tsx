@@ -151,11 +151,11 @@ export function ProfileInfoModals({
               every week.
             </Body>
             <ul className="mt-3 space-y-1.5 text-sm text-muted-foreground">
-              <li>• Tier 1 — Novice Scholar · 20–30 hrs</li>
-              <li>• Tier 2 — Steady Grinder · 30–45 hrs</li>
-              <li>• Tier 3 — Relentless · 45–60 hrs</li>
-              <li>• Tier 4 — Elite Bench · 60–70 hrs</li>
-              <li>• Tier 5 — Apex Mastery · 70+ hrs</li>
+              <li>• Level 1 — Novice Scholar · 20–30 hrs</li>
+              <li>• Level 2 — Steady Grinder · 30–45 hrs</li>
+              <li>• Level 3 — Relentless · 45–60 hrs</li>
+              <li>• Level 4 — Elite Bench · 60–70 hrs</li>
+              <li>• Level 5 — Apex Mastery · 70+ hrs</li>
             </ul>
             <Body>
               Totals recalculate automatically every <b>Sunday at 23:59</b>, then the week resets.

@@ -279,7 +279,7 @@ function RecallPage() {
             Start reading the PDF for at least {durationMinutes} minutes to complete your recall session
           </p>
           <p className="mt-3 text-xs text-muted-foreground">
-            Current Tier · <span className="font-bold text-foreground">T{item.tier}</span>
+            Current Level · <span className="font-bold text-foreground">T{item.tier}</span>
             {lockedDifficulty && (
               <span className={`ml-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-widest ${lockedDifficulty === "hard" ? "bg-destructive/15 text-destructive" : "bg-emerald-500/15 text-emerald-300"}`}>
                 {lockedDifficulty === "hard" ? "Hard Mode · Locked" : "Easy Mode · Locked"}

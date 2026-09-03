@@ -235,7 +235,7 @@ function PerformancePage() {
   }, []);
 
   // Warm the browser cache with every tier crest as soon as the page mounts so
-  // html2canvas never captures a half-loaded <img> (the Tier 2/3 blanks).
+  // html2canvas never captures a half-loaded <img> (the Level 2/3 blanks).
   useEffect(() => {
     WEEKLY_TIERS.forEach((t) => {
       const img = new Image();
@@ -498,7 +498,7 @@ function WrappedOverlay({
       value: metrics.tier ? metrics.tier.name : "Unranked",
       caption: metrics.tier
         ? metrics.tier.tagline
-        : `${UNRANKED_MIN_HOURS.toFixed(1)} weekly focus hours unlock Tier 1.`,
+        : `${UNRANKED_MIN_HOURS.toFixed(1)} weekly focus hours unlock Level 1.`,
       badge: metrics.tier,
     });
     return s;
@@ -608,7 +608,7 @@ function WrappedOverlay({
       </div>
 
       <div className="mt-4 flex items-center gap-2 text-[10px] text-white/70">
-        <span>Tier ladder:</span>
+        <span>Level ladder:</span>
         {WEEKLY_TIERS.map((t) => (
           <span key={t.id} className={metrics.tier?.id === t.id ? "font-bold text-white" : ""}>
             T{t.tier}
@@ -684,11 +684,11 @@ function readStudentName(): string {
 }
 
 
-// Tier grouping for the Armory Wall — full 5-tier progression.
+// Level grouping for the Armory Wall — full 5-tier progression.
 const PDF_THRESHOLDS = [30, 40, 50, 60, 70];
 const PDF_BAR_COLOR = "#5EEAD4";
 
-// Tier grouping helper types
+// Level grouping helper types
 const TIER_GROUPS: {
   key: "t1" | "t2" | "t3" | "t4" | "t5";
   label: string;
@@ -696,11 +696,11 @@ const TIER_GROUPS: {
   color: string;
   glow: string;
 }[] = [
-  { key: "t1", label: "Tier I · Bronze", tiers: [1], color: "#A9683C", glow: "rgba(169,104,60,0.65)" },
-  { key: "t2", label: "Tier II · Iron", tiers: [2], color: "#EF4444", glow: "rgba(239,68,68,0.65)" },
-  { key: "t3", label: "Tier III · Steel", tiers: [3], color: "#A855F7", glow: "rgba(168,85,247,0.65)" },
-  { key: "t4", label: "Tier IV · Titanium", tiers: [4], color: "#3B82F6", glow: "rgba(59,130,246,0.65)" },
-  { key: "t5", label: "Tier V · Platinum", tiers: [5], color: "#F5C542", glow: "rgba(245,197,66,0.7)" },
+  { key: "t1", label: "Level I · Bronze", tiers: [1], color: "#A9683C", glow: "rgba(169,104,60,0.65)" },
+  { key: "t2", label: "Level II · Iron", tiers: [2], color: "#EF4444", glow: "rgba(239,68,68,0.65)" },
+  { key: "t3", label: "Level III · Steel", tiers: [3], color: "#A855F7", glow: "rgba(168,85,247,0.65)" },
+  { key: "t4", label: "Level IV · Titanium", tiers: [4], color: "#3B82F6", glow: "rgba(59,130,246,0.65)" },
+  { key: "t5", label: "Level V · Platinum", tiers: [5], color: "#F5C542", glow: "rgba(245,197,66,0.7)" },
 ];
 
 
@@ -710,7 +710,7 @@ function TierColumnShield({ tier, glow }: { tier: 1 | 2 | 3 | 4 | 5; glow: strin
   return (
     <img
       src={`/cores/tier-${tier}.png`}
-      alt={`Tier ${tier} core`}
+      alt={`Level ${tier} core`}
       style={{
         display: "block",
         width: "100%",
@@ -1409,7 +1409,7 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
                 letterSpacing: "-0.01em",
               }}
             >
-              The Five-Tier Mastery Hierarchy
+              The Five-Level Mastery Hierarchy
             </h2>
 
 
@@ -1488,7 +1488,7 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
                       {/* Large centered emblem — flush to the top of the card.
                           Same-origin asset: no crossOrigin (it would force a
                           CORS fetch the dev/CDN host doesn't answer, which is
-                          what made Tier 2/3 vanish in canvas captures). */}
+                          what made Level 2/3 vanish in canvas captures). */}
                       <img
                         src={t.image}
                         alt={t.name}
@@ -1513,7 +1513,7 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
                       />
 
 
-                      {/* Tier · name · quote */}
+                      {/* Level · name · quote */}
                       <span
                         style={{
                           fontSize: 12,
@@ -1606,7 +1606,7 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
                 letterSpacing: "0.14em",
               }}
             >
-              Minimum 20 weekly focus hours required to enter Tier 1 (Novice Scholar).
+              Minimum 20 weekly focus hours required to enter Level 1 (Novice Scholar).
             </p>
             </div>
           </div>

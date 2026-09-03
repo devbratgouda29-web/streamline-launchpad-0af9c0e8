@@ -17,7 +17,7 @@ export type WeeklyTier = {
 };
 
 /**
- * Minimum weekly focus hours required to enter Tier 1 (Novice Scholar).
+ * Minimum weekly focus hours required to enter Level 1 (Novice Scholar).
  * Below this threshold the user is UNRANKED — no tier, no badge.
  */
 export const UNRANKED_MIN_HOURS = 20;
@@ -92,14 +92,14 @@ export const WEEKLY_TIERS: WeeklyTier[] = [
   },
 ];
 
-/** True when the user has not yet met the Tier 1 entry requirement. */
+/** True when the user has not yet met the Level 1 entry requirement. */
 export function isUnranked(hours: number): boolean {
   return Math.max(0, hours || 0) < UNRANKED_MIN_HOURS;
 }
 
 /**
  * The earned tier for the given weekly focus hours, or `null` when the user is
- * UNRANKED (below the Tier 1 entry threshold).
+ * UNRANKED (below the Level 1 entry threshold).
  */
 export function evaluateWeeklyTier(hours: number): WeeklyTier | null {
   const h = Math.max(0, hours || 0);
@@ -112,7 +112,7 @@ export function evaluateWeeklyTier(hours: number): WeeklyTier | null {
 
 /**
  * Progress target for the rank banner. Unranked users are pushed toward the
- * Tier 1 entry requirement; ranked users toward their next tier (or their own
+ * Level 1 entry requirement; ranked users toward their next tier (or their own
  * ceiling once at the summit).
  */
 export function rankProgress(hours: number): {

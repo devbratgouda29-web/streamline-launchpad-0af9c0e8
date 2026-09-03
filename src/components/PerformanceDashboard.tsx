@@ -69,7 +69,7 @@ export function PerformanceDashboard({
   const loggedHours = Math.max(0, Number(metrics?.hours) || 0);
   const tierGlow = metrics?.tier?.glow ?? "rgba(212,175,55,0.35)";
 
-  // Unranked users progress toward the Tier 1 entry requirement; ranked users
+  // Unranked users progress toward the Level 1 entry requirement; ranked users
   // progress toward the next tier. 0 logged hours renders exactly 0%.
   const rank = rankProgress(loggedHours);
 
@@ -128,7 +128,7 @@ export function PerformanceDashboard({
             </p>
             <p className="mt-0.5 text-[11px] italic text-muted-foreground">
               {metrics?.tier?.tagline ??
-                `${UNRANKED_MIN_HOURS.toFixed(1)} weekly focus hours unlock Tier 1.`}
+                `${UNRANKED_MIN_HOURS.toFixed(1)} weekly focus hours unlock Level 1.`}
             </p>
             <p className="mt-2 text-3xl font-black tabular-nums">
               {loggedHours.toFixed(1)}

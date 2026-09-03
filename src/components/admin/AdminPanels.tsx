@@ -280,7 +280,7 @@ export function TestingToolsCard() {
   const grant = (id: string, tier: 1 | 2 | 3 | 4 | 5 | null) => {
     setDisplayTier(id, tier);
     refresh();
-    toast.success(tier ? `Tier ${tier} badge granted` : "Badge revoked");
+    toast.success(tier ? `Level ${tier} badge granted` : "Badge revoked");
   };
 
   const addHours = () => {
@@ -371,7 +371,7 @@ export function TestingToolsCard() {
               <p className="truncate text-xs font-semibold">
                 {it.name}
                 <span className="ml-2 font-normal text-muted-foreground">
-                  badge: {it.displayTier ? `Tier ${it.displayTier}` : "none"}
+                  badge: {it.displayTier ? `Level ${it.displayTier}` : "none"}
                 </span>
               </p>
               <div className="mt-2 flex flex-wrap gap-1.5">
