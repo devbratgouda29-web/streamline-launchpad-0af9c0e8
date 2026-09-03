@@ -63,68 +63,6 @@ const CHAPTER_TIER_META: Record<RevisionItem["tier"], { label: string; color: st
   5: { label: "Platinum Core", color: "#F5F3FF" },
 };
 
-// Small inline SVG shield used inside the printable PDF (works in print CSS
-// without external assets). Two-stop gradient + subtle inner sheen.
-function MiniShield({
-  color,
-  size = 30,
-  glyph,
-}: {
-  color: string;
-  size?: number;
-  glyph?: string;
-}) {
-  const uid = `${color.replace(/[^a-z0-9]/gi, "")}-${size}`;
-  return (
-    <svg viewBox="0 0 60 66" width={size} height={size} style={{ display: "block" }}>
-      <defs>
-        <linearGradient id={`ms-g-${uid}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="1" />
-          <stop offset="100%" stopColor="#111827" stopOpacity="1" />
-        </linearGradient>
-        <linearGradient id={`ms-s-${uid}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
-          <stop offset="60%" stopColor="#ffffff" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M30 3 L55 12 V33 C55 49 44 60 30 63 C16 60 5 49 5 33 V12 Z"
-        fill={`url(#ms-g-${uid})`}
-        stroke="#D4AF37"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M30 3 L55 12 V33 C55 49 44 60 30 63 C16 60 5 49 5 33 V12 Z"
-        fill={`url(#ms-s-${uid})`}
-      />
-      {glyph && (
-        <text
-          x="30"
-          y="40"
-          textAnchor="middle"
-          fontFamily="Poppins, ui-sans-serif, sans-serif"
-          fontWeight="900"
-          fontSize="22"
-          fill="#F5F5F5"
-        >
-          {glyph}
-        </text>
-      )}
-    </svg>
-  );
-}
-
-const HABIT_BADGE_TIERS = [
-  { min: 60, label: "PLATINUM", color: "#F5F3FF" },
-  { min: 30, label: "TITANIUM", color: "#E2E8F0" },
-  { min: 15, label: "STEEL", color: "#7DD3FC" },
-  { min: 7, label: "IRON", color: "#B0B4BC" },
-  { min: 1, label: "BRONZE", color: "#CD7F32" },
-  { min: 0, label: "SPARK", color: "#64748B" },
-];
-function habitTier(streak: number) {
-  return HABIT_BADGE_TIERS.find((t) => streak >= t.min) ?? HABIT_BADGE_TIERS[HABIT_BADGE_TIERS.length - 1];
-}
 
 export const Route = createFileRoute("/_app/performance")({
   head: () => ({
@@ -642,8 +580,6 @@ const TEXT = "#F5F5F5";
 const MUTED = "#9CA3AF";
 
 type MissionDayLite = { date: string; tasks: { done: boolean }[] };
-type HabitLite = { name: string; emoji?: string; streak: number; relapses?: { ts: number; reason?: string }[] };
-
 function readMissionDays(): MissionDayLite[] {
   if (typeof window === "undefined") return [];
   try {
@@ -654,16 +590,6 @@ function readMissionDays(): MissionDayLite[] {
     if (parsed?.active) days.push(parsed.active);
     if (Array.isArray(parsed?.history)) days.push(...parsed.history);
     return days;
-  } catch {
-    return [];
-  }
-}
-
-function readHabits(): HabitLite[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem("ftlb.habits.v2");
-    return raw ? (JSON.parse(raw) as HabitLite[]) : [];
   } catch {
     return [];
   }
@@ -714,10 +640,10 @@ function TierColumnShield({ tier, glow }: { tier: 1 | 2 | 3 | 4 | 5; glow: strin
       style={{
         display: "block",
         width: "100%",
-        maxWidth: 100,
+        maxWidth: 150,
         height: "auto",
         objectFit: "contain",
-        filter: `drop-shadow(0 0 12px ${glow})`,
+        filter: `drop-shadow(0 0 14px ${glow})`,
       }}
       draggable={false}
     />
@@ -889,8 +815,7 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
       borderBottom: `1px dashed rgba(212,175,55,0.15)`,
     };
 
-    // --- Page 2 data: habits + weekly stacked bars -------------------------
-    const habits = readHabits();
+    // --- Page 2 data: weekly stacked bars ----------------------------------
     const weekBuckets = monthlyStudyByWeekSubject();
     const chartMax = Math.max(80, ...weekBuckets.map((b) => b.total));
 
@@ -1155,48 +1080,6 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
               Consistency & Weekly Distribution
             </h2>
 
-            {/* HABIT TRACKER · badge grid */}
-            <div style={{ ...comicPanel, padding: "26px 16px 16px", marginBottom: 22 }}>
-              <span style={tag}>Habit Tracker</span>
-              {habits.length === 0 ? (
-                <p style={{ fontSize: 12, color: MUTED, margin: 0 }}>No habits logged.</p>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {habits.slice(0, 8).map((h) => {
-                    const t = habitTier(h.streak);
-                    return (
-                      <div
-                        key={h.name}
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 14,
-                          padding: "10px 14px",
-                          background: PANEL_2,
-                          borderRadius: 6,
-                          border: `1px solid ${GOLD_SOFT}`,
-                          textAlign: "left",
-                          width: "100%",
-                        }}
-                      >
-                        <MiniShield color={t.color} size={58} />
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: TEXT, lineHeight: 1.2 }}>
-                            {h.emoji ? `${h.emoji} ` : ""}
-                            {h.name}
-                          </p>
-                          <p style={{ margin: "4px 0 0", fontSize: 13, fontWeight: 800, color: "#34D399" }}>
-                            {h.streak} days
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
             {/* WEEKLY TOTAL-HOURS BAR GRAPH */}
             <div style={{ ...comicPanel, padding: "26px 16px 18px" }}>
               <span style={tag}>Study Hours · Weekly Totals</span>
@@ -1280,10 +1163,10 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-                  gap: 10,
+                  gap: 16,
                   alignItems: "start",
                   width: "100%",
-                  minHeight: 260,
+                  minHeight: 320,
                 }}
               >
                 {grouped.map((g) => (
@@ -1293,11 +1176,12 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
-                      gap: 10,
+                      gap: 12,
                       minWidth: 0,
+                      width: "100%",
                     }}
                   >
-                    <div>
+                    <div style={{ width: "100%", maxWidth: 150 }}>
                       <TierColumnShield
                         tier={
                           (Number(String(g.key).slice(1)) as 1 | 2 | 3 | 4 | 5) || 1
