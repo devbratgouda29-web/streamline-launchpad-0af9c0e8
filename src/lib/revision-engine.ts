@@ -260,7 +260,12 @@ export function subscribe(listener: Listener): () => void {
   return () => listeners.delete(listener);
 }
 
-/** Register a chapter / notes item for tracking. Starts at Level 1 due now. */
+/**
+ * Register a chapter / notes item for tracking. The chapter starts at
+ * Level 0/5 — no badge is displayed or awarded until the user completes
+ * their first recall session and claims it. The first scheduled recall is
+ * for Level 1 and is due after the first interval.
+ */
 export function addItem(
   name: string,
   kind: RevisionKind = "chapter",

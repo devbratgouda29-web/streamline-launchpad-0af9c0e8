@@ -236,7 +236,7 @@ function LibraryPage() {
             const pct = item ? progressPct(item, now) : 0;
             // Shield ALWAYS reflects the most recently CLAIMED badge. No badge
             // is shown until the user completes a recall session and claims it.
-            const shieldTier = (item?.tier ?? item?.displayTier) as TierNumber | undefined;
+            const shieldTier = item?.displayTier as TierNumber | undefined;
             const shieldLoop = item?.displayLoopCount ?? 0;
             return (
             <li key={n.id} className="rounded-2xl bg-card p-3 pt-2 ring-1 ring-border">
@@ -405,7 +405,7 @@ function LibraryPage() {
                           <Brain className="h-3.5 w-3.5" />
                         </span>
                         <span className="text-[11px] font-bold uppercase tracking-wide text-purple-200">
-                          {item.fractured ? "FRACTURED · Restore required" : `Tracking Active · Level ${item.displayTier ?? item.tier}/5`}
+                          {item.fractured ? "FRACTURED · Restore required" : `Tracking Active · Level ${item.displayTier ?? 0}/5`}
                         </span>
                       </span>
                     </div>
@@ -596,7 +596,7 @@ function LibraryPage() {
                         <div>
                           <div className="flex items-center justify-between text-[11px]">
                             <span className="font-bold uppercase tracking-wide text-purple-200">
-                              {item.fractured ? "FRACTURED" : `Level ${item.displayTier ?? item.tier}/5`}
+                              {item.fractured ? "FRACTURED" : `Level ${item.displayTier ?? 0}/5`}
                             </span>
                             <span className="text-muted-foreground">
                               {item.fractured ? "Restore required" : new Date(item.nextDueAt).toLocaleString()}
