@@ -14,11 +14,11 @@ export type ArmoryGroup = {
 };
 
 export const ARMORY_GROUPS: Omit<ArmoryGroup, "entries">[] = [
-  { key: "t1", label: "Tier I · Bronze", tiers: [1], color: "#A9683C", glow: "rgba(169,104,60,0.65)" },
-  { key: "t2", label: "Tier II · Iron", tiers: [2], color: "#EF4444", glow: "rgba(239,68,68,0.65)" },
-  { key: "t3", label: "Tier III · Steel", tiers: [3], color: "#A855F7", glow: "rgba(168,85,247,0.65)" },
-  { key: "t4", label: "Tier IV · Titanium", tiers: [4], color: "#3B82F6", glow: "rgba(59,130,246,0.65)" },
-  { key: "t5", label: "Tier V · Platinum", tiers: [5], color: "#F5C542", glow: "rgba(245,197,66,0.7)" },
+  { key: "t1", label: "Level I · Bronze", tiers: [1], color: "#A9683C", glow: "rgba(169,104,60,0.65)" },
+  { key: "t2", label: "Level II · Iron", tiers: [2], color: "#EF4444", glow: "rgba(239,68,68,0.65)" },
+  { key: "t3", label: "Level III · Steel", tiers: [3], color: "#A855F7", glow: "rgba(168,85,247,0.65)" },
+  { key: "t4", label: "Level IV · Titanium", tiers: [4], color: "#3B82F6", glow: "rgba(59,130,246,0.65)" },
+  { key: "t5", label: "Level V · Platinum", tiers: [5], color: "#F5C542", glow: "rgba(245,197,66,0.7)" },
 ];
 
 

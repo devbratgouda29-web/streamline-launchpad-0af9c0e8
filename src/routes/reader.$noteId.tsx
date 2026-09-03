@@ -323,7 +323,7 @@ function ReaderCompletionOverlay({
             </p>
             <h2 className="mt-2 text-2xl font-black text-white">Select Difficulty</h2>
             <p className="mt-2 text-sm text-white/70">
-              You forged Platinum. Pick the mode for your next cycle — it locks until you complete Tier 5 again.
+              You forged Platinum. Pick the mode for your next cycle — it locks until you complete Level 5 again.
             </p>
             <div className="mt-6 grid gap-3">
               <button
@@ -397,8 +397,8 @@ function ReaderCompletionOverlay({
               </p>
               <p className="mt-2 text-xs text-white/60">
                 {claimed.repaired
-                  ? `Your ${tierName} shield is repaired. Complete the next scheduled recall for Tier ${awardedTier} to advance.`
-                  : `Chapter advanced to Tier ${claimed.tier}${claimed.loopCount > 0 ? ` · Re-Loop ×${claimed.loopCount + 1}` : ""}.`}
+                  ? `Your ${tierName} shield is repaired. Complete the next scheduled recall for Level ${awardedTier} to advance.`
+                  : `Chapter advanced to Level ${claimed.tier}${claimed.loopCount > 0 ? ` · Re-Loop ×${claimed.loopCount + 1}` : ""}.`}
               </p>
               {!claimed.repaired && claimed.justCompletedPlatinum ? (
                 <button

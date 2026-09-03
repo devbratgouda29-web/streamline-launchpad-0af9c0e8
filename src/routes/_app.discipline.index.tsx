@@ -40,7 +40,7 @@ const blocks: Block[] = [
   {
     id: "habits",
     title: "Habit RPG Tracker",
-    subtitle: "Progress rings · 15-tier rank shields",
+    subtitle: "Progress rings · 15-level rank shields",
     desc: "Level up daily habits and climb from Recruit to Sovereign.",
     icon: ShieldCheck,
     accent: "crimson",

@@ -222,7 +222,7 @@ function RankShieldFrameBase({
           style={{ borderColor: tier.stroke, color: tier.stroke }}
         >
           <TierIcon name={tier.icon} className="h-3 w-3" />
-          {tier.name} Tier · Lvl {level} / 15
+          {tier.name} · Lvl {level} / 15
         </span>
 
         <HeroShieldImg level={level} tier={tier} />

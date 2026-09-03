@@ -83,7 +83,7 @@ function RankUpCelebrationBase({
 
         <div className="max-w-md space-y-2">
           <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-white/70">
-            Level {level} · {tier.name} Tier
+            Level {level} · {tier.name}
           </p>
           <h1
             className="text-3xl font-black uppercase leading-tight tracking-[0.08em]"
@@ -92,7 +92,7 @@ function RankUpCelebrationBase({
             {rankName}
           </h1>
           <p className="text-sm text-white/80">
-            You have unlocked a new tier emblem. Wear it with pride, then get back to the grind.
+            You have unlocked a new level emblem. Wear it with pride, then get back to the grind.
           </p>
         </div>
 

@@ -23,7 +23,7 @@ function CoreShieldBase({
     return (
       <img
         src={`/cores/tier-${tier}.png`}
-        alt={label ?? `Tier ${tier} core`}
+        alt={label ?? `Level ${tier} core`}
         width={fluid ? undefined : size}
         height={fluid ? undefined : size}
         loading="lazy"

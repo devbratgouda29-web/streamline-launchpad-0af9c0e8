@@ -147,15 +147,15 @@ export function ProfileInfoModals({
             <SectionTitle>Discipline Rank Ladder</SectionTitle>
             <Body>
               Every claimed focus hour feeds your weekly total. Cross a threshold and you climb the
-              five-tier ladder. Ranks are based on the current week only — they are earned again,
+              five-level ladder. Ranks are based on the current week only — they are earned again,
               every week.
             </Body>
             <ul className="mt-3 space-y-1.5 text-sm text-muted-foreground">
-              <li>• Tier 1 — Novice Scholar · 20–30 hrs</li>
-              <li>• Tier 2 — Steady Grinder · 30–45 hrs</li>
-              <li>• Tier 3 — Relentless · 45–60 hrs</li>
-              <li>• Tier 4 — Elite Bench · 60–70 hrs</li>
-              <li>• Tier 5 — Apex Mastery · 70+ hrs</li>
+              <li>• Level 1 — Novice Scholar · 20–30 hrs</li>
+              <li>• Level 2 — Steady Grinder · 30–45 hrs</li>
+              <li>• Level 3 — Relentless · 45–60 hrs</li>
+              <li>• Level 4 — Elite Bench · 60–70 hrs</li>
+              <li>• Level 5 — Apex Mastery · 70+ hrs</li>
             </ul>
             <Body>
               Totals recalculate automatically every <b>Sunday at 23:59</b>, then the week resets.
@@ -182,7 +182,7 @@ export function ProfileInfoModals({
               </li>
               <li>
                 • <b className="text-foreground">Mastery Badges</b> — unlocked by reaching a rank
-                tier and holding it, marking sustained deep-work volume.
+                level and holding it, marking sustained deep-work volume.
               </li>
               <li>
                 • <b className="text-foreground">Overtime Badges</b> — earned by stacking +10 min
@@ -220,7 +220,7 @@ export function ProfileInfoModals({
             <SectionTitle>Performance Transcripts &amp; PDF Export</SectionTitle>
             <Body>
               From the Performance screen, export an official multi-page weekly transcript: focus
-              totals, rank progression, the full five-tier hierarchy, and your weekly chapter
+              totals, rank progression, the full five-level hierarchy, and your weekly chapter
               revision log.
             </Body>
             <Body>

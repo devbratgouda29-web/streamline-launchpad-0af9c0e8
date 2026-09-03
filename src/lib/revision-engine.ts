@@ -13,14 +13,14 @@ export type RevisionItem = {
   tier: 1 | 2 | 3 | 4 | 5;
   lastReviewedAt: number;
   nextDueAt: number;
-  mastered: boolean; // reaches true when Tier 5 achieved
+  mastered: boolean; // reaches true when Level 5 achieved
   history: { at: number; tier: number; difficulty: Difficulty }[];
   sourceId?: string; // external id (e.g. library note id) for lookup
   startedAt?: number; // baseline anchor timestamp
   fractured?: boolean; // true after a missed midnight deadline
   frozenPct?: number; // progress pct locked in at fracture time
   lockedDifficulty?: Difficulty; // strict-mode lock: only allowed choice until cycle completes
-  loopCount?: number; // 0 on first pass; +1 each time Tier 5 is claimed
+  loopCount?: number; // 0 on first pass; +1 each time Level 5 is claimed
   badges?: string[]; // audit trail of badges awarded on claim
   paused?: boolean; // when true, tracking is disabled; badges preserved
   highestBadge?: string; // highest badge earned (preserved through pause)
@@ -48,7 +48,7 @@ export function pauseItem(id: string): RevisionItem | null {
 }
 
 /**
- * Resume tracking. Starts the next loop from Tier 1 while preserving
+ * Resume tracking. Starts the next loop from Level 1 while preserving
  * loopCount and earned badges (so the shield shows e.g. "Bronze Core x3").
  */
 export function resumeItem(id: string, difficulty: Difficulty = "easy"): RevisionItem | null {
@@ -107,7 +107,7 @@ export function repairFractured(id: string): RevisionItem | null {
   return updated;
 }
 
-/** True until the user completes their first Tier 5 pass. */
+/** True until the user completes their first Level 5 pass. */
 export function canSwitchDifficulty(item: RevisionItem): boolean {
   return (item.loopCount ?? 0) >= 1;
 }
@@ -134,10 +134,10 @@ export function setDifficulty(id: string, difficulty: Difficulty): RevisionItem 
 }
 
 /**
- * Advance a chapter to its next tier after the user claims their reward.
+ * Advance a chapter to its next level after the user claims their reward.
  * Returns badge + resulting tier/loop for the celebration UI.
- * Tier 1→2→3→4→5. Claiming at Tier 5 completes the cycle and restarts at
- * Tier 1 with loopCount++.
+ * Level 1→2→3→4→5. Claiming at Level 5 completes the cycle and restarts at
+ * Level 1 with loopCount++.
  */
 export function advanceOnClaim(
   id: string,
@@ -200,7 +200,7 @@ function badgeLabel(tier: RevisionItem["tier"], loopCount: number): string {
 const HOUR = 60 * 60 * 1000;
 const DAY = 24 * HOUR;
 
-// Tier -> {hard, easy} interval in ms. Tier 1 is the starting tier.
+// Level -> {hard, easy} interval in ms. Level 1 is the starting tier.
 export const INTERVAL_MATRIX: Record<
   1 | 2 | 3 | 4 | 5,
   { hard: number; easy: number }
@@ -260,7 +260,12 @@ export function subscribe(listener: Listener): () => void {
   return () => listeners.delete(listener);
 }
 
-/** Register a chapter / notes item for tracking. Starts at Tier 1 due now. */
+/**
+ * Register a chapter / notes item for tracking. The chapter starts at
+ * Level 0/5 — no badge is displayed or awarded until the user completes
+ * their first recall session and claims it. The first scheduled recall is
+ * for Level 1 and is due after the first interval.
+ */
 export function addItem(
   name: string,
   kind: RevisionKind = "chapter",
@@ -316,7 +321,7 @@ export function removeItem(id: string) {
   safeSave(safeLoad().filter((i) => i.id !== id));
 }
 
-/** Reset a mastered item back to Tier 1 to re-loop the revision cycle. */
+/** Reset a mastered item back to Level 1 to re-loop the revision cycle. */
 export function resetItem(id: string, difficulty: Difficulty = "easy"): RevisionItem | null {
   const items = safeLoad();
   const idx = items.findIndex((i) => i.id === id);
@@ -341,7 +346,7 @@ export function resetItem(id: string, difficulty: Difficulty = "easy"): Revision
 
 /**
  * Record a review outcome. `hard` keeps the item at the current tier's hard
- * interval; `easy` promotes to the next tier (up to Tier 5 = Mastered).
+ * interval; `easy` promotes to the next level (up to Level 5 = Mastered).
  */
 export function reviewItem(id: string, difficulty: Difficulty): RevisionItem | null {
   const items = safeLoad();
@@ -521,7 +526,7 @@ export function isLockdownActive(): boolean {
   return getFracturedItems().length > 0;
 }
 
-/** Restore a fractured item — resets to Tier 1 and clears the fracture. */
+/** Restore a fractured item — resets to Level 1 and clears the fracture. */
 export function restoreItem(id: string, difficulty: Difficulty = "easy"): RevisionItem | null {
   const items = safeLoad();
   const idx = items.findIndex((i) => i.id === id);
