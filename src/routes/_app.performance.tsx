@@ -63,68 +63,6 @@ const CHAPTER_TIER_META: Record<RevisionItem["tier"], { label: string; color: st
   5: { label: "Platinum Core", color: "#F5F3FF" },
 };
 
-// Small inline SVG shield used inside the printable PDF (works in print CSS
-// without external assets). Two-stop gradient + subtle inner sheen.
-function MiniShield({
-  color,
-  size = 30,
-  glyph,
-}: {
-  color: string;
-  size?: number;
-  glyph?: string;
-}) {
-  const uid = `${color.replace(/[^a-z0-9]/gi, "")}-${size}`;
-  return (
-    <svg viewBox="0 0 60 66" width={size} height={size} style={{ display: "block" }}>
-      <defs>
-        <linearGradient id={`ms-g-${uid}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="1" />
-          <stop offset="100%" stopColor="#111827" stopOpacity="1" />
-        </linearGradient>
-        <linearGradient id={`ms-s-${uid}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
-          <stop offset="60%" stopColor="#ffffff" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M30 3 L55 12 V33 C55 49 44 60 30 63 C16 60 5 49 5 33 V12 Z"
-        fill={`url(#ms-g-${uid})`}
-        stroke="#D4AF37"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M30 3 L55 12 V33 C55 49 44 60 30 63 C16 60 5 49 5 33 V12 Z"
-        fill={`url(#ms-s-${uid})`}
-      />
-      {glyph && (
-        <text
-          x="30"
-          y="40"
-          textAnchor="middle"
-          fontFamily="Poppins, ui-sans-serif, sans-serif"
-          fontWeight="900"
-          fontSize="22"
-          fill="#F5F5F5"
-        >
-          {glyph}
-        </text>
-      )}
-    </svg>
-  );
-}
-
-const HABIT_BADGE_TIERS = [
-  { min: 60, label: "PLATINUM", color: "#F5F3FF" },
-  { min: 30, label: "TITANIUM", color: "#E2E8F0" },
-  { min: 15, label: "STEEL", color: "#7DD3FC" },
-  { min: 7, label: "IRON", color: "#B0B4BC" },
-  { min: 1, label: "BRONZE", color: "#CD7F32" },
-  { min: 0, label: "SPARK", color: "#64748B" },
-];
-function habitTier(streak: number) {
-  return HABIT_BADGE_TIERS.find((t) => streak >= t.min) ?? HABIT_BADGE_TIERS[HABIT_BADGE_TIERS.length - 1];
-}
 
 export const Route = createFileRoute("/_app/performance")({
   head: () => ({
