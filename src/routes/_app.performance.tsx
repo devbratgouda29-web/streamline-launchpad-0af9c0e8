@@ -1163,10 +1163,10 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-                  gap: 10,
+                  gap: 16,
                   alignItems: "start",
                   width: "100%",
-                  minHeight: 260,
+                  minHeight: 320,
                 }}
               >
                 {grouped.map((g) => (
@@ -1176,11 +1176,12 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
-                      gap: 10,
+                      gap: 12,
                       minWidth: 0,
+                      width: "100%",
                     }}
                   >
-                    <div>
+                    <div style={{ width: "100%", maxWidth: 150 }}>
                       <TierColumnShield
                         tier={
                           (Number(String(g.key).slice(1)) as 1 | 2 | 3 | 4 | 5) || 1
