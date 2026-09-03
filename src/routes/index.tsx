@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-
+import { quotes } from "./_app/discipline/habits";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -51,6 +51,12 @@ function SplashPage() {
   const navigate = useNavigate();
   const [src, setSrc] = useState("/splash-logo.png");
 
+  // Pick a random quote from the imported Sovereign Whisper collection
+  const [splashQuote] = useState(() => {
+    if (!quotes || quotes.length === 0) return "The best brains of the nation may be found on the last bench of the classroom.";
+    return quotes[Math.floor(Math.random() * quotes.length)];
+  });
+ 
   useEffect(() => {
     const t = setTimeout(() => {
       try {
@@ -79,10 +85,7 @@ function SplashPage() {
         />
       </div>
       <p className="mt-[20px] max-w-xl px-6 text-center text-lg font-extrabold uppercase leading-snug tracking-wide text-amber-400 sm:text-xl md:text-2xl">
-        The best brains of the nation may be found on the last bench of the classroom
-      </p>
-      <p className="mt-1 text-center text-sm font-medium text-zinc-100 sm:text-base">
-        — Dr. A.P.J Abdul Kalam
+        "{splashQuote}"
       </p>
       <div className="mt-6 h-1 w-40 overflow-hidden rounded-full bg-primary-foreground/20">
         <div className="h-full w-full origin-left animate-[splash-progress_7s_linear_forwards] rounded-full bg-accent-amber" />
