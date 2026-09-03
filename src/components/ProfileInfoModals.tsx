@@ -147,7 +147,7 @@ export function ProfileInfoModals({
             <SectionTitle>Discipline Rank Ladder</SectionTitle>
             <Body>
               Every claimed focus hour feeds your weekly total. Cross a threshold and you climb the
-              five-tier ladder. Ranks are based on the current week only — they are earned again,
+              five-level ladder. Ranks are based on the current week only — they are earned again,
               every week.
             </Body>
             <ul className="mt-3 space-y-1.5 text-sm text-muted-foreground">
@@ -182,7 +182,7 @@ export function ProfileInfoModals({
               </li>
               <li>
                 • <b className="text-foreground">Mastery Badges</b> — unlocked by reaching a rank
-                tier and holding it, marking sustained deep-work volume.
+                level and holding it, marking sustained deep-work volume.
               </li>
               <li>
                 • <b className="text-foreground">Overtime Badges</b> — earned by stacking +10 min
@@ -220,7 +220,7 @@ export function ProfileInfoModals({
             <SectionTitle>Performance Transcripts &amp; PDF Export</SectionTitle>
             <Body>
               From the Performance screen, export an official multi-page weekly transcript: focus
-              totals, rank progression, the full five-tier hierarchy, and your weekly chapter
+              totals, rank progression, the full five-level hierarchy, and your weekly chapter
               revision log.
             </Body>
             <Body>

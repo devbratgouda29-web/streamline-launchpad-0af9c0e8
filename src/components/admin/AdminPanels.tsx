@@ -266,7 +266,7 @@ export function ReviewModerationCard() {
   );
 }
 
-/** 4. Demo / testing tools — tier badges, focus hours and library shortcuts. */
+/** 4. Demo / testing tools — level badges, focus hours and library shortcuts. */
 export function TestingToolsCard() {
   const [items, setItems] = useState<RevisionItem[]>([]);
   const [hours, setHours] = useState("2");
@@ -303,7 +303,7 @@ export function TestingToolsCard() {
       </h2>
       <p className="text-[11px] text-muted-foreground">
         Testing mode is {IS_TESTING_MODE ? "ON — every user is treated as Premium" : "OFF"}. Grant
-        tier badges and focus hours below to test any rank state instantly.
+        level badges and focus hours below to test any rank state instantly.
       </p>
 
       <button
