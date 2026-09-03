@@ -1080,48 +1080,6 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
               Consistency & Weekly Distribution
             </h2>
 
-            {/* HABIT TRACKER · badge grid */}
-            <div style={{ ...comicPanel, padding: "26px 16px 16px", marginBottom: 22 }}>
-              <span style={tag}>Habit Tracker</span>
-              {habits.length === 0 ? (
-                <p style={{ fontSize: 12, color: MUTED, margin: 0 }}>No habits logged.</p>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {habits.slice(0, 8).map((h) => {
-                    const t = habitTier(h.streak);
-                    return (
-                      <div
-                        key={h.name}
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 14,
-                          padding: "10px 14px",
-                          background: PANEL_2,
-                          borderRadius: 6,
-                          border: `1px solid ${GOLD_SOFT}`,
-                          textAlign: "left",
-                          width: "100%",
-                        }}
-                      >
-                        <MiniShield color={t.color} size={58} />
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: TEXT, lineHeight: 1.2 }}>
-                            {h.emoji ? `${h.emoji} ` : ""}
-                            {h.name}
-                          </p>
-                          <p style={{ margin: "4px 0 0", fontSize: 13, fontWeight: 800, color: "#34D399" }}>
-                            {h.streak} days
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
             {/* WEEKLY TOTAL-HOURS BAR GRAPH */}
             <div style={{ ...comicPanel, padding: "26px 16px 18px" }}>
               <span style={tag}>Study Hours · Weekly Totals</span>
