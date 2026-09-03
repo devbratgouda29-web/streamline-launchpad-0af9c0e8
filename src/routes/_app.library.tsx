@@ -120,10 +120,9 @@ function LibraryPage() {
               reviews: s?.count ?? 0,
               note: {
                 ...n,
-        // Fallback to placeholder if cover_url is missing or null
-        cover_url: n.cover_url || (n as any).coverUrl || (n as any).thumbnail_url || "/placeholder.svg",
-      },
-    };
+                cover_url: n.cover_image_url || n.thumbnail_url || "/placeholder.svg",
+              },
+            };
   });
         setAllNotes(notes);
         purchasedRef.current = mapped;
