@@ -815,8 +815,7 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
       borderBottom: `1px dashed rgba(212,175,55,0.15)`,
     };
 
-    // --- Page 2 data: habits + weekly stacked bars -------------------------
-    const habits = readHabits();
+    // --- Page 2 data: weekly stacked bars ----------------------------------
     const weekBuckets = monthlyStudyByWeekSubject();
     const chartMax = Math.max(80, ...weekBuckets.map((b) => b.total));
 
