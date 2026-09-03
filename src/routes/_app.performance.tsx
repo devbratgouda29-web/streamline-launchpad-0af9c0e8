@@ -580,8 +580,6 @@ const TEXT = "#F5F5F5";
 const MUTED = "#9CA3AF";
 
 type MissionDayLite = { date: string; tasks: { done: boolean }[] };
-type HabitLite = { name: string; emoji?: string; streak: number; relapses?: { ts: number; reason?: string }[] };
-
 function readMissionDays(): MissionDayLite[] {
   if (typeof window === "undefined") return [];
   try {
@@ -592,16 +590,6 @@ function readMissionDays(): MissionDayLite[] {
     if (parsed?.active) days.push(parsed.active);
     if (Array.isArray(parsed?.history)) days.push(...parsed.history);
     return days;
-  } catch {
-    return [];
-  }
-}
-
-function readHabits(): HabitLite[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem("ftlb.habits.v2");
-    return raw ? (JSON.parse(raw) as HabitLite[]) : [];
   } catch {
     return [];
   }
