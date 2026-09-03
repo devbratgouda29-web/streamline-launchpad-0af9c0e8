@@ -254,7 +254,12 @@ function LibraryPage() {
                     />
                   ) : (
                     <div className="grid h-full w-full place-items-center bg-muted text-[10px] text-muted-foreground">
-                      No Cover
+                       <span className="line-clamp-2 uppercase tracking-tight text-amber-400">
+                         {n.title}
+                      </span>
+                      <div className="border-t border-white/10 pt-1 text-[7px] text-zinc-400">
+                        {n.note.subject || "NOTES"}
+                     </div>
                     </div>
                   )}
                 </div>                
