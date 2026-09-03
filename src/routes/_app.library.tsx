@@ -51,7 +51,7 @@ type LibNote = {
   progress: number;
   avgRating: number;
   reviews: number;
-  note: Note;
+  note: Note & { cover_url: string | null };
 };
 
 function LibraryPage() {
