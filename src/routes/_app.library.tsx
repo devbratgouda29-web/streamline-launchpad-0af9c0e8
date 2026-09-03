@@ -51,7 +51,7 @@ type LibNote = {
   progress: number;
   avgRating: number;
   reviews: number;
-  note: Note;
+  note: Note & { cover_url: string | null };
 };
 
 function LibraryPage() {
@@ -120,10 +120,9 @@ function LibraryPage() {
               reviews: s?.count ?? 0,
               note: {
                 ...n,
-        // Fallback to placeholder if cover_url is missing or null
-        cover_url: n.cover_url || (n as any).coverUrl || (n as any).thumbnail_url || "/placeholder.svg",
-      },
-    };
+                cover_url: n.cover_image_url || n.thumbnail_url || "/placeholder.svg",
+              },
+            };
   });
         setAllNotes(notes);
         purchasedRef.current = mapped;
@@ -243,7 +242,18 @@ function LibraryPage() {
             <li key={n.id} className="rounded-2xl bg-card p-3 pt-2 ring-1 ring-border">
               <div className="flex gap-3">
                 <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-xl bg-muted">
-                  {n.note.cover_url ? (
+                  {!n.note.cover_url || n.note.cover_url === "/placeholder.svg" ? (
+                    <div className="grid h-full w-full place-items-center bg-crimson-gradient p-2 text-center">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="line-clamp-2 text-[10px] font-bold uppercase leading-tight text-amber-400">
+                          {n.title}
+                        </span>
+                        <div className="border-t border-white/10 pt-1 text-[8px] font-semibold uppercase tracking-wider text-zinc-300">
+                          {n.note.subject || "NOTES"}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
                     <img
                       src={n.note.cover_url}
                       alt=""
@@ -252,15 +262,6 @@ function LibraryPage() {
                         e.currentTarget.style.display = "none";
                       }}
                     />
-                  ) : (
-                    <div className="grid h-full w-full place-items-center bg-muted text-[10px] text-muted-foreground">
-                       <span className="line-clamp-2 uppercase tracking-tight text-amber-400">
-                         {n.title}
-                      </span>
-                      <div className="border-t border-white/10 pt-1 text-[7px] text-zinc-400">
-                        {n.note.subject || "NOTES"}
-                     </div>
-                    </div>
                   )}
                 </div>                
                 <div className="flex min-w-0 flex-1 flex-col justify-between">
