@@ -640,10 +640,10 @@ function TierColumnShield({ tier, glow }: { tier: 1 | 2 | 3 | 4 | 5; glow: strin
       style={{
         display: "block",
         width: "100%",
-        maxWidth: 100,
+        maxWidth: 150,
         height: "auto",
         objectFit: "contain",
-        filter: `drop-shadow(0 0 12px ${glow})`,
+        filter: `drop-shadow(0 0 14px ${glow})`,
       }}
       draggable={false}
     />
