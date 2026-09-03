@@ -92,7 +92,7 @@ function RankUpCelebrationBase({
             {rankName}
           </h1>
           <p className="text-sm text-white/80">
-            You have unlocked a new tier emblem. Wear it with pride, then get back to the grind.
+            You have unlocked a new level emblem. Wear it with pride, then get back to the grind.
           </p>
         </div>
 

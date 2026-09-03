@@ -112,7 +112,7 @@ export function evaluateWeeklyTier(hours: number): WeeklyTier | null {
 
 /**
  * Progress target for the rank banner. Unranked users are pushed toward the
- * Level 1 entry requirement; ranked users toward their next tier (or their own
+ * Level 1 entry requirement; ranked users toward their next level (or their own
  * ceiling once at the summit).
  */
 export function rankProgress(hours: number): {

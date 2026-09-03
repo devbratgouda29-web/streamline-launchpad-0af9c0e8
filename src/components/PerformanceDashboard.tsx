@@ -70,7 +70,7 @@ export function PerformanceDashboard({
   const tierGlow = metrics?.tier?.glow ?? "rgba(212,175,55,0.35)";
 
   // Unranked users progress toward the Level 1 entry requirement; ranked users
-  // progress toward the next tier. 0 logged hours renders exactly 0%.
+  // progress toward the next level. 0 logged hours renders exactly 0%.
   const rank = rankProgress(loggedHours);
 
 
@@ -147,7 +147,7 @@ export function PerformanceDashboard({
               </span>{" "}
               {(rank?.percent ?? 0) >= 100 && !rank?.unranked
                 ? "logged this cycle"
-                : `to ${rank?.targetName ?? "next tier"}`}
+                : `to ${rank?.targetName ?? "next level"}`}
             </span>
 
             <span className="font-bold" style={{ color: GOLD }}>

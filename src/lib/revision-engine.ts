@@ -134,7 +134,7 @@ export function setDifficulty(id: string, difficulty: Difficulty): RevisionItem 
 }
 
 /**
- * Advance a chapter to its next tier after the user claims their reward.
+ * Advance a chapter to its next level after the user claims their reward.
  * Returns badge + resulting tier/loop for the celebration UI.
  * Level 1→2→3→4→5. Claiming at Level 5 completes the cycle and restarts at
  * Level 1 with loopCount++.
@@ -341,7 +341,7 @@ export function resetItem(id: string, difficulty: Difficulty = "easy"): Revision
 
 /**
  * Record a review outcome. `hard` keeps the item at the current tier's hard
- * interval; `easy` promotes to the next tier (up to Level 5 = Mastered).
+ * interval; `easy` promotes to the next level (up to Level 5 = Mastered).
  */
 export function reviewItem(id: string, difficulty: Difficulty): RevisionItem | null {
   const items = safeLoad();
