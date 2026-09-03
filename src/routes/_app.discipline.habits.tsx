@@ -75,7 +75,7 @@ function nextMilestone(streak: number): Milestone | null {
 }
 
 // ---------- Quotes ----------
-const quotes: string[] = [
+export const quotes: string[] = [
   "The last bench isn't a seating arrangement; it's a mindset. Prove them wrong.",
   "Your excuses sound best to the mind that is making them up. Stop listening.",
   "I know recovery is hard but believe me regret is even harder. So choose wisely.",
