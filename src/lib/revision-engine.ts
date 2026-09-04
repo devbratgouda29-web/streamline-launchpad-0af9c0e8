@@ -455,6 +455,7 @@ export function getGhostTasks(now: number = Date.now()): GhostTask[] {
     id: `ghost-${i.id}`,
     itemId: i.id,
     title: `Obligatory Recall: ${i.name}`,
+    chapterName: i.name,
     href: `/recall/${i.id}`,
     overdueMs: now - i.nextDueAt,
     dueTomorrow: isDueTomorrow(i, now),
