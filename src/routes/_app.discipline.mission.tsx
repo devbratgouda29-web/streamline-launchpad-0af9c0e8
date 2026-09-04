@@ -310,8 +310,13 @@ function MissionLockdownPage() {
           }} />
           <div className="relative mb-3 flex items-center gap-2">
             <Ghost className="h-4 w-4 text-purple-300" />
-            <h2 className="text-sm font-bold uppercase tracking-wide">Ghost Tasks</h2>
-            <span className="ml-auto rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-purple-200">
+            <h2 className="min-w-0 flex-1 truncate text-sm font-bold uppercase tracking-wide">
+              {ghosts[0]?.chapterName ?? "Ghost Tasks"}
+            </h2>
+            <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-purple-200">
+              {ghosts.reduce((sum, g) => sum + g.durationMin, 0)} min
+            </span>
+            <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-purple-200">
               {ghosts.length} haunting
             </span>
           </div>
@@ -321,16 +326,16 @@ function MissionLockdownPage() {
                 <Link
                   to="/recall/$itemId"
                   params={{ itemId: g.itemId }}
+                  title={g.title}
                   className="flex items-center gap-3 rounded-xl border border-purple-500/30 bg-black/30 px-3 py-2.5 transition-colors hover:bg-black/50"
                 >
                   <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-purple-500/20 text-purple-200">
                     <Ghost className="h-4 w-4" />
                   </span>
-                  <span className="flex-1 truncate text-sm font-semibold">{g.title}</span>
                   <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-200">
-                    {g.durationMin} min
+                    Ghost Task
                   </span>
-                  <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-200">
+                  <span className="ml-auto shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-200">
                     {g.graceLabel}
                   </span>
                   {g.dueTomorrow && (
@@ -338,11 +343,9 @@ function MissionLockdownPage() {
                       Due Tomorrow
                     </span>
                   )}
-                  <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-purple-300">
+                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.14em] text-purple-300">
                     Recall →
                   </span>
-
-
                 </Link>
               </li>
             ))}

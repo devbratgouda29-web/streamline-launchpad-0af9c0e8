@@ -425,6 +425,7 @@ export type GhostTask = {
   id: string;
   itemId: string;
   title: string;
+  chapterName: string;
   href: string;
   overdueMs: number;
   dueTomorrow: boolean;
@@ -454,6 +455,7 @@ export function getGhostTasks(now: number = Date.now()): GhostTask[] {
     id: `ghost-${i.id}`,
     itemId: i.id,
     title: `Obligatory Recall: ${i.name}`,
+    chapterName: i.name,
     href: `/recall/${i.id}`,
     overdueMs: now - i.nextDueAt,
     dueTomorrow: isDueTomorrow(i, now),
