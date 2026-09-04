@@ -425,6 +425,7 @@ export type GhostTask = {
   id: string;
   itemId: string;
   title: string;
+  chapterName: string;
   href: string;
   overdueMs: number;
   dueTomorrow: boolean;
