@@ -306,6 +306,11 @@ function MissionLockdownPage() {
   const totalCount = active ? active.tasks.length : 0;
   const remainingMs = active ? Math.max(0, active.expiresAt - now) : 0;
   const expired = !!active && remainingMs <= 0;
+  const diaryDays = useMemo(
+    () => buildDiaryDays(state.history, revLogs),
+    [state.history, revLogs],
+  );
+
 
   return (
     <div className="flex flex-col gap-5 px-5 pb-24 pt-4">
