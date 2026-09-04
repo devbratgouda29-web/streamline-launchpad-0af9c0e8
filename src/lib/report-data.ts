@@ -83,35 +83,57 @@ export function buildLedgerRows(
 ): LedgerRow[] {
   const focusDaily = loadFocusDaily();
   const wake = readWakeTarget();
-  const missionByDate = new Map<string, MissionDayLite>();
-  readMissionDays()
-    .filter((d) => {
-      const t = new Date(d.date + "T00:00:00").getTime();
-      return t >= range.start.getTime() && t < range.end.getTime();
-    })
-    .forEach((d) => missionByDate.set(d.date, d));
+
+  // Load actual mission diary entries directly from local storage
+  const diaryRaw =
+    typeof window !== "undefined"
+      ? localStorage.getItem("mission_diary") ||
+        localStorage.getItem("ftlb.mission.v1") ||
+        "[]"
+      : "[]";
+
+  let diaryData: any[] = [];
+  try {
+    const parsed = JSON.parse(diaryRaw);
+    diaryData = Array.isArray(parsed)
+      ? parsed
+      : (parsed.history || [parsed.active]).filter(Boolean);
+  } catch {
+    diaryData = [];
+  }
 
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(anchor);
     d.setDate(d.getDate() + i);
     const key = dateKey(d);
     const secs = focusDaily[key] ?? 0;
-    const md = missionByDate.get(key);
     const isToday = key === dateKey(new Date());
-    const hours = secs / 3600;
-    const ghostsTotal = secs > 0 ? Math.max(1, Math.round(hours * 0.6)) : 0;
+
+    // Find actual day entry from mission diary
+    const dayEntry = diaryData.find((item: any) => item.date === key);
+    const taskList: any[] = dayEntry?.tasks || [];
+
+    // Separate self-made tasks vs ghost tasks
+    const stdTasks = taskList.filter((t) => !t.isGhostTask && !t.ghost);
+    const ghostTasks = taskList.filter((t) => t.isGhostTask || t.ghost);
+
+    const tasksDone = stdTasks.filter((t) => t.completed || t.done).length;
+    const tasksTotal = stdTasks.length;
+
+    const ghostsCleared = ghostTasks.filter((t) => t.completed || t.done).length;
+    const ghostsTotal = ghostTasks.length;
+
     return {
       key,
       weekday: d.toLocaleDateString(undefined, { weekday: "short" }),
       dateLabel: d.toLocaleDateString(undefined, { day: "numeric", month: "short" }),
-      hours,
-      tasksDone: md?.tasks?.filter((t) => t.done).length ?? 0,
-      tasksTotal: md?.tasks?.length ?? 0,
+      hours: secs / 3600,
+      tasksDone,
+      tasksTotal,
       ghostsTotal,
-      ghostsCleared: Math.round(ghostsTotal * (retention / 100)),
+      ghostsCleared,
       wake: secs > 0 || isToday ? wake : "—",
       isToday,
     };
   });
 }
-
