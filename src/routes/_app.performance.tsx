@@ -737,7 +737,7 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
     // --- 7-Day Field Ledger rows -------------------------------------------
     const focusDaily = loadFocusDaily();
     const missionByDate = new Map<string, MissionDayLite>();
-    missionDays.forEach((d) => missionByDate.set(d.date, d));
+    readMissionDays().forEach((d) => missionByDate.set(d.date, d));
     let wakeTarget = "—";
     try {
       const raw = window.localStorage.getItem("ftlb.alarm.v1");
@@ -751,24 +751,37 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
       view === "weekly"
         ? new Date(range.start)
         : (() => { const d = new Date(); d.setDate(d.getDate() - 6); return d; })();
+    
+    // Sync mission diary tasks (Standard & Ghost tasks) directly from localStorage
+    const diaryRaw = typeof window !== "undefined" ? localStorage.getItem("mission_diary") || "[]" : "[]";
+    const diaryData = JSON.parse(diaryRaw);
+   
     const ledgerRows = Array.from({ length: 7 }, (_, i) => {
       const d = new Date(anchor);
       d.setDate(d.getDate() + i);
       const key = dateKey(d);
       const secs = focusDaily[key] ?? 0;
-      const md = missionByDate.get(key);
-      const tasksTotal = md?.tasks?.length ?? 0;
-      const tasksDone = md?.tasks?.filter((t) => t.done).length ?? 0;
       const isToday = key === dateKey(new Date());
-      const ghostTotal = secs > 0 ? Math.max(1, Math.round((secs / 3600) * 0.6)) : 0;
-      const ghostCleared = Math.round(ghostTotal * (metrics.retention / 100));
+
+      // Look up entry in mission_diary or missionByDate
+      const dayEntry = diaryData.find((item: any) => item.date === key);
+
+      // Self-made / standard tasks
+      const stdTasks = dayEntry?.tasks?.filter((t: any) => !t.isGhostTask) || [];
+      const stdTotal = stdTasks.length;
+      const stdDone = stdTasks.filter((t: any) => t.completed || t.done).length;
+
+      // Ghost tasks
+      const ghostTasks = dayEntry?.tasks?.filter((t: any) => t.isGhostTask) || [];
+      const ghostDone = ghostTasks.filter((t: any) => t.completed || t.done).length;
+      
       return {
         key,
         label: d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }),
         wake: secs > 0 || isToday ? wakeTarget : "—",
-        hours: `${(secs / 3600).toFixed(1)} hrs`,
-        tasks: tasksTotal ? `${tasksDone} / ${tasksTotal}` : "—",
-        ghosts: ghostTotal ? `${ghostCleared} / ${ghostTotal}` : "—",
+        hours: secs > 0 ? `${(secs / 3600).toFixed(1)} hrs` : "—",
+        tasks: stdTotal > 0 ? `${stdDone} / ${stdTotal}` : "—",
+        ghosts: ghostDone > 0 ? `${ghostDone}` : "—",
       };
     });
 
@@ -982,21 +995,21 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
                 <table style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead>
                     <tr>
-                      <th style={th}>Date</th>
-                      <th style={th}>Woke-Up</th>
-                      <th style={th}>Study Hrs</th>
-                      <th style={th}>Tasks</th>
-                      <th style={th}>Ghost Tasks</th>
+                      <th style={{ ...th, textAlign: "left" }}>Date</th>
+                      <th style={{ ...th, textAlign: "center" }}>Woke-Up</th>
+                      <th style={{ ...th, textAlign: "center" }}>Study Hrs</th>
+                      <th style={{ ...th, textAlign: "center" }}>Tasks</th>
+                      <th style={{ ...th, textAlign: "center" }}>Ghost Tasks</th>
                     </tr>
                   </thead>
                   <tbody>
                     {ledgerRows.map((r) => (
                       <tr key={r.key}>
-                        <td style={{ ...td, color: MUTED, fontWeight: 600 }}>{r.label}</td>
-                        <td style={td}>{r.wake}</td>
-                        <td style={td}>{r.hours}</td>
-                        <td style={td}>{r.tasks}</td>
-                        <td style={td}>{r.ghosts}</td>
+                        <td style={{ ...td, color: MUTED, fontWeight: 600, textAlign: "left" }}>{r.label}</td>
+                        <td style={{ ...td, textAlign: "center" }}>{r.wake}</td>
+                        <td style={{ ...td, textAlign: "center" }}>{r.hours}</td>
+                        <td style={{ ...td, textAlign: "center" }}>{r.tasks}</td>
+                        <td style={{ ...td, textAlign: "center" }}>{r.ghosts}</td>
                       </tr>
                     ))}
                   </tbody>
