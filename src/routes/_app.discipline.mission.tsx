@@ -29,6 +29,8 @@ import {
   subscribe as subscribeRevision,
   type GhostTask,
 } from "@/lib/revision-engine";
+import { loadRevisionLogs, type RevisionLog } from "@/lib/revision-logs";
+
 
 export const Route = createFileRoute("/_app/discipline/mission")({
   head: () => ({
@@ -60,7 +62,58 @@ type MissionState = {
   history: MissionDay[];
 };
 
+/** One diary card = one calendar date (YYYY-MM-DD). */
+type DiaryDay = {
+  date: string;
+  tasks: Task[];
+  ghosts: { id: string; chapterName: string; minutes: number }[];
+  result: DayResult;
+};
+
+/**
+ * Collapse every finished mission + completed ghost task into a single entry
+ * per date key, so a day never renders more than one diary card.
+ */
+function buildDiaryDays(history: MissionDay[], logs: RevisionLog[]): DiaryDay[] {
+  const byDate = new Map<string, DiaryDay>();
+  const ensure = (date: string): DiaryDay => {
+    let d = byDate.get(date);
+    if (!d) {
+      d = { date, tasks: [], ghosts: [], result: "pending" };
+      byDate.set(date, d);
+    }
+    return d;
+  };
+
+  for (const day of history) {
+    const entry = ensure(day.date);
+    for (const t of day.tasks) {
+      if (!entry.tasks.some((x) => x.id === t.id)) entry.tasks.push(t);
+    }
+  }
+
+  for (const log of logs) {
+    const entry = ensure(log.date);
+    if (!entry.ghosts.some((g) => g.id === log.id)) {
+      entry.ghosts.push({
+        id: log.id,
+        chapterName: log.chapterName,
+        minutes: log.totalMinutesSpent,
+      });
+    }
+  }
+
+  return Array.from(byDate.values())
+    .map((d) => {
+      const total = d.tasks.length + d.ghosts.length;
+      const done = d.tasks.filter((t) => t.done).length + d.ghosts.length;
+      return { ...d, result: (total > 0 && done === total ? "win" : "loss") as DayResult };
+    })
+    .sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
 const STORAGE_KEY = "ftlb.mission.v1";
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function todayKey(d = new Date()): string {
@@ -117,22 +170,29 @@ function MissionLockdownPage() {
   const [drafts, setDrafts] = useState<string[]>([""]);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [now, setNow] = useState<number>(() => Date.now());
-  const [viewDay, setViewDay] = useState<MissionDay | null>(null);
+  const [viewDay, setViewDay] = useState<DiaryDay | null>(null);
   const [showWin, setShowWin] = useState(false);
   const winShownRef = useRef<string | null>(null);
   const [ghosts, setGhosts] = useState<GhostTask[]>([]);
+  const [revLogs, setRevLogs] = useState<RevisionLog[]>([]);
 
   // Keep ghost tasks fresh: on hydrate, every 30s, and on engine mutations.
   useEffect(() => {
-    const refresh = () => setGhosts(getGhostTasks());
+    const refresh = () => {
+      setGhosts(getGhostTasks());
+      setRevLogs(loadRevisionLogs());
+    };
     refresh();
     const unsub = subscribeRevision(refresh);
     const id = window.setInterval(refresh, 30_000);
+    window.addEventListener("ftlb:revision-logged", refresh);
     return () => {
       unsub();
       window.clearInterval(id);
+      window.removeEventListener("ftlb:revision-logged", refresh);
     };
   }, []);
+
 
   // Hydrate from localStorage
   useEffect(() => {
@@ -246,6 +306,11 @@ function MissionLockdownPage() {
   const totalCount = active ? active.tasks.length : 0;
   const remainingMs = active ? Math.max(0, active.expiresAt - now) : 0;
   const expired = !!active && remainingMs <= 0;
+  const diaryDays = useMemo(
+    () => buildDiaryDays(state.history, revLogs),
+    [state.history, revLogs],
+  );
+
 
   return (
     <div className="flex flex-col gap-5 px-5 pb-24 pt-4">
@@ -311,11 +376,8 @@ function MissionLockdownPage() {
           <div className="relative mb-3 flex items-center gap-2">
             <Ghost className="h-4 w-4 text-purple-300" />
             <h2 className="min-w-0 flex-1 truncate text-sm font-bold uppercase tracking-wide">
-              {ghosts[0]?.chapterName ?? "Ghost Tasks"}
+              Ghost Task
             </h2>
-            <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-purple-200">
-              {ghosts.reduce((sum, g) => sum + g.durationMin, 0)} min
-            </span>
             <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-purple-200">
               {ghosts.length} haunting
             </span>
@@ -327,29 +389,25 @@ function MissionLockdownPage() {
                   to="/recall/$itemId"
                   params={{ itemId: g.itemId }}
                   title={g.title}
-                  className="flex items-center gap-3 rounded-xl border border-purple-500/30 bg-black/30 px-3 py-2.5 transition-colors hover:bg-black/50"
+                  className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-purple-500/30 bg-black/30 px-3 py-2.5 transition-colors hover:border-purple-400/60 hover:bg-black/50 active:scale-[0.99]"
                 >
                   <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-purple-500/20 text-purple-200">
                     <Ghost className="h-4 w-4" />
                   </span>
+                  <span className="min-w-0 flex-1 truncate text-sm font-semibold text-purple-50">
+                    {g.chapterName}
+                  </span>
+                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-300">
+                    {g.dueTomorrow ? "Due Tomorrow" : g.graceLabel}
+                  </span>
                   <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-200">
-                    Ghost Task
-                  </span>
-                  <span className="ml-auto shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-200">
-                    {g.graceLabel}
-                  </span>
-                  {g.dueTomorrow && (
-                    <span className="shrink-0 rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-amber-200">
-                      Due Tomorrow
-                    </span>
-                  )}
-                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.14em] text-purple-300">
-                    Recall →
+                    {g.durationMin} min
                   </span>
                 </Link>
               </li>
             ))}
           </ul>
+
           <p className="relative mt-3 text-[11px] text-purple-200/70">
             The forgetting curve summoned these. Clear them before they compound.
           </p>
@@ -488,18 +546,21 @@ function MissionLockdownPage() {
             Mission Diary
           </h2>
         </div>
-        {state.history.length === 0 ? (
+        {diaryDays.length === 0 ? (
           <p className="rounded-xl border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
             No past missions yet. Lock in your first mission above.
           </p>
         ) : (
           <div className="max-h-72 overflow-y-auto pr-1">
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {state.history.map((d, i) => {
+              {diaryDays.map((d) => {
                 const isWin = d.result === "win";
+                const total = d.tasks.length + d.ghosts.length;
+                const done =
+                  d.tasks.filter((t) => t.done).length + d.ghosts.length;
                 return (
                   <button
-                    key={d.date + d.startedAt + i}
+                    key={d.date}
                     onClick={() => setViewDay(d)}
                     className={`flex flex-col items-start gap-1 rounded-xl border p-2 text-left transition-colors ${
                       isWin
@@ -518,7 +579,7 @@ function MissionLockdownPage() {
                       {isWin ? "Win" : "Loss"}
                     </span>
                     <span className="text-[10px] text-muted-foreground">
-                      {d.tasks.filter((t) => t.done).length}/{d.tasks.length}
+                      {done}/{total}
                     </span>
                   </button>
                 );
@@ -526,6 +587,7 @@ function MissionLockdownPage() {
             </div>
           </div>
         )}
+
       </section>
 
       {/* Confirm lock modal */}
@@ -569,11 +631,14 @@ function MissionLockdownPage() {
               </span>
             </DialogTitle>
             <DialogDescription>
-              Frozen record — {viewDay?.tasks.filter((t) => t.done).length}/
-              {viewDay?.tasks.length} completed.
+              Frozen record —{" "}
+              {(viewDay?.tasks.filter((t) => t.done).length ?? 0) +
+                (viewDay?.ghosts.length ?? 0)}
+              /{(viewDay?.tasks.length ?? 0) + (viewDay?.ghosts.length ?? 0)}{" "}
+              completed.
             </DialogDescription>
           </DialogHeader>
-          <ul className="flex flex-col gap-2">
+          <ul className="flex max-h-[60vh] flex-col gap-2 overflow-y-auto">
             {viewDay?.tasks.map((t) => (
               <li
                 key={t.id}
@@ -591,7 +656,22 @@ function MissionLockdownPage() {
                 </span>
               </li>
             ))}
+            {viewDay?.ghosts.map((g) => (
+              <li
+                key={g.id}
+                className="flex items-center gap-2 rounded-lg border border-purple-500/30 bg-purple-500/10 px-3 py-2"
+              >
+                <Ghost className="h-4 w-4 shrink-0 text-purple-400" />
+                <span className="min-w-0 flex-1 truncate text-sm">
+                  {g.chapterName}
+                </span>
+                <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-200">
+                  {g.minutes} min
+                </span>
+              </li>
+            ))}
           </ul>
+
         </DialogContent>
       </Dialog>
 
