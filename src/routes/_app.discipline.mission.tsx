@@ -626,11 +626,14 @@ function MissionLockdownPage() {
               </span>
             </DialogTitle>
             <DialogDescription>
-              Frozen record — {viewDay?.tasks.filter((t) => t.done).length}/
-              {viewDay?.tasks.length} completed.
+              Frozen record —{" "}
+              {(viewDay?.tasks.filter((t) => t.done).length ?? 0) +
+                (viewDay?.ghosts.length ?? 0)}
+              /{(viewDay?.tasks.length ?? 0) + (viewDay?.ghosts.length ?? 0)}{" "}
+              completed.
             </DialogDescription>
           </DialogHeader>
-          <ul className="flex flex-col gap-2">
+          <ul className="flex max-h-[60vh] flex-col gap-2 overflow-y-auto">
             {viewDay?.tasks.map((t) => (
               <li
                 key={t.id}
@@ -648,7 +651,22 @@ function MissionLockdownPage() {
                 </span>
               </li>
             ))}
+            {viewDay?.ghosts.map((g) => (
+              <li
+                key={g.id}
+                className="flex items-center gap-2 rounded-lg border border-purple-500/30 bg-purple-500/10 px-3 py-2"
+              >
+                <Ghost className="h-4 w-4 shrink-0 text-purple-400" />
+                <span className="min-w-0 flex-1 truncate text-sm">
+                  {g.chapterName}
+                </span>
+                <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-200">
+                  {g.minutes} min
+                </span>
+              </li>
+            ))}
           </ul>
+
         </DialogContent>
       </Dialog>
 
