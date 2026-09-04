@@ -119,22 +119,29 @@ function MissionLockdownPage() {
   const [drafts, setDrafts] = useState<string[]>([""]);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [now, setNow] = useState<number>(() => Date.now());
-  const [viewDay, setViewDay] = useState<MissionDay | null>(null);
+  const [viewDay, setViewDay] = useState<DiaryDay | null>(null);
   const [showWin, setShowWin] = useState(false);
   const winShownRef = useRef<string | null>(null);
   const [ghosts, setGhosts] = useState<GhostTask[]>([]);
+  const [revLogs, setRevLogs] = useState<RevisionLog[]>([]);
 
   // Keep ghost tasks fresh: on hydrate, every 30s, and on engine mutations.
   useEffect(() => {
-    const refresh = () => setGhosts(getGhostTasks());
+    const refresh = () => {
+      setGhosts(getGhostTasks());
+      setRevLogs(loadRevisionLogs());
+    };
     refresh();
     const unsub = subscribeRevision(refresh);
     const id = window.setInterval(refresh, 30_000);
+    window.addEventListener("ftlb:revision-logged", refresh);
     return () => {
       unsub();
       window.clearInterval(id);
+      window.removeEventListener("ftlb:revision-logged", refresh);
     };
   }, []);
+
 
   // Hydrate from localStorage
   useEffect(() => {
