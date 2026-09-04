@@ -244,7 +244,7 @@ function PerformancePage() {
           d.setDate(d.getDate() - 6);
           return d;
         })();
-  const ledger = useMemo(() => buildLedgerRows(anchor, range, metrics.retention), [range, tick]);
+  const ledger = useMemo(() => buildLedgerRows(anchor, range, metrics.retention), [anchor, range, metrics.retention, tick]);
   const habits = useMemo(() => readHabitsLite(), [tick]);
 
   return (
@@ -734,56 +734,44 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
 
     };
 
-    // --- 7-Day Field Ledger rows -------------------------------------------
+    // --- 7-Day Field Ledger rows for PDF -------------------------------------------
     const focusDaily = loadFocusDaily();
-    const missionByDate = new Map<string, MissionDayLite>();
-    readMissionDays().forEach((d) => missionByDate.set(d.date, d));
-    let wakeTarget = "—";
-    try {
-      const raw = window.localStorage.getItem("ftlb.alarm.v1");
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed?.time) wakeTarget = parsed.time;
-      }
-    } catch { /* ignore */ }
+const diaryRaw = typeof window !== "undefined" ? localStorage.getItem("mission_diary") || localStorage.getItem("ftlb.mission.v1") || "[]" : "[]";
+let diaryData: any[] = [];
+try {
+  const parsed = JSON.parse(diaryRaw);
+  diaryData = Array.isArray(parsed) ? parsed : (parsed.history || [parsed.active]).filter(Boolean);
+} catch {
+  diaryData = [];
+}
 
-    const anchor =
-      view === "weekly"
-        ? new Date(range.start)
-        : (() => { const d = new Date(); d.setDate(d.getDate() - 6); return d; })();
-    
-    // Sync mission diary tasks (Standard & Ghost tasks) directly from localStorage
-    const diaryRaw = typeof window !== "undefined" ? localStorage.getItem("mission_diary") || "[]" : "[]";
-    const diaryData = JSON.parse(diaryRaw);
-   
-    const ledgerRows = Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(anchor);
-      d.setDate(d.getDate() + i);
-      const key = dateKey(d);
-      const secs = focusDaily[key] ?? 0;
-      const isToday = key === dateKey(new Date());
+const ledgerRows = Array.from({ length: 7 }, (_, i) => {
+  const d = new Date(anchor);
+  d.setDate(d.getDate() + i);
+  const key = dateKey(d);
+  const secs = focusDaily[key] ?? 0;
+  const isToday = key === dateKey(new Date());
 
-      // Look up entry in mission_diary or missionByDate
-      const dayEntry = diaryData.find((item: any) => item.date === key);
+  const dayEntry = diaryData.find((item: any) => item.date === key);
+  const taskList: any[] = dayEntry?.tasks || [];
 
-      // Self-made / standard tasks
-      const stdTasks = dayEntry?.tasks?.filter((t: any) => !t.isGhostTask) || [];
-      const stdTotal = stdTasks.length;
-      const stdDone = stdTasks.filter((t: any) => t.completed || t.done).length;
+  const stdTasks = taskList.filter((t) => !t.isGhostTask && !t.ghost);
+  const ghostTasks = taskList.filter((t) => t.isGhostTask || t.ghost);
 
-      // Ghost tasks
-      const ghostTasks = dayEntry?.tasks?.filter((t: any) => t.isGhostTask) || [];
-      const ghostDone = ghostTasks.filter((t: any) => t.completed || t.done).length;
-      
-      return {
-        key,
-        label: d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }),
-        wake: secs > 0 || isToday ? wakeTarget : "—",
-        hours: secs > 0 ? `${(secs / 3600).toFixed(1)} hrs` : "—",
-        tasks: stdTotal > 0 ? `${stdDone} / ${stdTotal}` : "—",
-        ghosts: ghostDone > 0 ? `${ghostDone}` : "—",
-      };
-    });
+  const stdDone = stdTasks.filter((t) => t.completed || t.done).length;
+  const stdTotal = stdTasks.length;
+
+  const ghostDone = ghostTasks.filter((t) => t.completed || t.done).length;
+
+  return {
+    key,
+    label: d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }),
+    wake: secs > 0 || isToday ? wakeTarget : "—",
+    hours: secs > 0 ? `${(secs / 3600).toFixed(1)} hrs` : "—",
+    tasks: stdTotal > 0 ? `${stdDone}/${stdTotal}` : "—",
+    ghosts: ghostDone > 0 ? `${ghostDone}` : "—",
+  };
+});
 
     // --- Armory Wall grouping ----------------------------------------------
     // Same source of truth as the live dashboard: only chapters that have
