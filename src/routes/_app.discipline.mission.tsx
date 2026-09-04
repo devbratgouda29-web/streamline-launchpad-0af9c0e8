@@ -29,6 +29,8 @@ import {
   subscribe as subscribeRevision,
   type GhostTask,
 } from "@/lib/revision-engine";
+import { loadRevisionLogs, type RevisionLog } from "@/lib/revision-logs";
+
 
 export const Route = createFileRoute("/_app/discipline/mission")({
   head: () => ({
