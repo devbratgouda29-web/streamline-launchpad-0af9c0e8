@@ -311,11 +311,8 @@ function MissionLockdownPage() {
           <div className="relative mb-3 flex items-center gap-2">
             <Ghost className="h-4 w-4 text-purple-300" />
             <h2 className="min-w-0 flex-1 truncate text-sm font-bold uppercase tracking-wide">
-              {ghosts[0]?.chapterName ?? "Ghost Tasks"}
+              Ghost Task
             </h2>
-            <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-purple-200">
-              {ghosts.reduce((sum, g) => sum + g.durationMin, 0)} min
-            </span>
             <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-purple-200">
               {ghosts.length} haunting
             </span>
@@ -327,29 +324,25 @@ function MissionLockdownPage() {
                   to="/recall/$itemId"
                   params={{ itemId: g.itemId }}
                   title={g.title}
-                  className="flex items-center gap-3 rounded-xl border border-purple-500/30 bg-black/30 px-3 py-2.5 transition-colors hover:bg-black/50"
+                  className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-purple-500/30 bg-black/30 px-3 py-2.5 transition-colors hover:border-purple-400/60 hover:bg-black/50 active:scale-[0.99]"
                 >
                   <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-purple-500/20 text-purple-200">
                     <Ghost className="h-4 w-4" />
                   </span>
+                  <span className="min-w-0 flex-1 truncate text-sm font-semibold text-purple-50">
+                    {g.chapterName}
+                  </span>
+                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-300">
+                    {g.dueTomorrow ? "Due Tomorrow" : g.graceLabel}
+                  </span>
                   <span className="shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-200">
-                    Ghost Task
-                  </span>
-                  <span className="ml-auto shrink-0 rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-purple-200">
-                    {g.graceLabel}
-                  </span>
-                  {g.dueTomorrow && (
-                    <span className="shrink-0 rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-amber-200">
-                      Due Tomorrow
-                    </span>
-                  )}
-                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.14em] text-purple-300">
-                    Recall →
+                    {g.durationMin} min
                   </span>
                 </Link>
               </li>
             ))}
           </ul>
+
           <p className="relative mt-3 text-[11px] text-purple-200/70">
             The forgetting curve summoned these. Clear them before they compound.
           </p>
