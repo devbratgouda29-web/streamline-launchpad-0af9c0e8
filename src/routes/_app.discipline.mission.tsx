@@ -541,18 +541,21 @@ function MissionLockdownPage() {
             Mission Diary
           </h2>
         </div>
-        {state.history.length === 0 ? (
+        {diaryDays.length === 0 ? (
           <p className="rounded-xl border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
             No past missions yet. Lock in your first mission above.
           </p>
         ) : (
           <div className="max-h-72 overflow-y-auto pr-1">
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {state.history.map((d, i) => {
+              {diaryDays.map((d) => {
                 const isWin = d.result === "win";
+                const total = d.tasks.length + d.ghosts.length;
+                const done =
+                  d.tasks.filter((t) => t.done).length + d.ghosts.length;
                 return (
                   <button
-                    key={d.date + d.startedAt + i}
+                    key={d.date}
                     onClick={() => setViewDay(d)}
                     className={`flex flex-col items-start gap-1 rounded-xl border p-2 text-left transition-colors ${
                       isWin
@@ -571,7 +574,7 @@ function MissionLockdownPage() {
                       {isWin ? "Win" : "Loss"}
                     </span>
                     <span className="text-[10px] text-muted-foreground">
-                      {d.tasks.filter((t) => t.done).length}/{d.tasks.length}
+                      {done}/{total}
                     </span>
                   </button>
                 );
@@ -579,6 +582,7 @@ function MissionLockdownPage() {
             </div>
           </div>
         )}
+
       </section>
 
       {/* Confirm lock modal */}
