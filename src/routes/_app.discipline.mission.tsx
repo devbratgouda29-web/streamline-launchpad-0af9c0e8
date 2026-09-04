@@ -62,7 +62,58 @@ type MissionState = {
   history: MissionDay[];
 };
 
+/** One diary card = one calendar date (YYYY-MM-DD). */
+type DiaryDay = {
+  date: string;
+  tasks: Task[];
+  ghosts: { id: string; chapterName: string; minutes: number }[];
+  result: DayResult;
+};
+
+/**
+ * Collapse every finished mission + completed ghost task into a single entry
+ * per date key, so a day never renders more than one diary card.
+ */
+function buildDiaryDays(history: MissionDay[], logs: RevisionLog[]): DiaryDay[] {
+  const byDate = new Map<string, DiaryDay>();
+  const ensure = (date: string): DiaryDay => {
+    let d = byDate.get(date);
+    if (!d) {
+      d = { date, tasks: [], ghosts: [], result: "pending" };
+      byDate.set(date, d);
+    }
+    return d;
+  };
+
+  for (const day of history) {
+    const entry = ensure(day.date);
+    for (const t of day.tasks) {
+      if (!entry.tasks.some((x) => x.id === t.id)) entry.tasks.push(t);
+    }
+  }
+
+  for (const log of logs) {
+    const entry = ensure(log.date);
+    if (!entry.ghosts.some((g) => g.id === log.id)) {
+      entry.ghosts.push({
+        id: log.id,
+        chapterName: log.chapterName,
+        minutes: log.totalMinutesSpent,
+      });
+    }
+  }
+
+  return Array.from(byDate.values())
+    .map((d) => {
+      const total = d.tasks.length + d.ghosts.length;
+      const done = d.tasks.filter((t) => t.done).length + d.ghosts.length;
+      return { ...d, result: (total > 0 && done === total ? "win" : "loss") as DayResult };
+    })
+    .sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
 const STORAGE_KEY = "ftlb.mission.v1";
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function todayKey(d = new Date()): string {
