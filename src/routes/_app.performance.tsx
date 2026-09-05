@@ -34,7 +34,7 @@ import { markReportClaimed } from "@/lib/weekly-report-pdf";
 import { exportSectionsToPdf } from "@/lib/dom-pdf";
 // Chart-heavy dashboard (recharts) — split out of the route entry chunk.
 const PerformanceDashboard = lazy(() => import("@/components/PerformanceDashboard").then((m) => ({ default: m.PerformanceDashboard })));
-import { buildLedgerRows, readGhostCounts, readHabitsLite } from "@/lib/report-data";
+import { buildLedgerRows, readGhostCounts, readHabitsLite, readWakeTarget } from "@/lib/report-data";
 
 import { getAllItems, type RevisionItem } from "@/lib/revision-engine";
 import { formatRevisionTotal, revisionLogEntries } from "@/lib/revision-logs";
@@ -737,6 +737,8 @@ const PrintableReportCard = forwardRef<HTMLDivElement, PrintableProps>(
     // --- 7-Day Field Ledger rows for PDF -------------------------------------------
     const focusDaily = loadFocusDaily();
     const ghostCounts = readGhostCounts();
+    const ledgerAnchor = new Date(range.start);
+    const ledgerWake = readWakeTarget();
 const diaryRaw = typeof window !== "undefined" ? localStorage.getItem("mission_diary") || localStorage.getItem("ftlb.mission.v1") || "[]" : "[]";
 let diaryData: any[] = [];
 try {
@@ -747,7 +749,7 @@ try {
 }
 
 const ledgerRows = Array.from({ length: 7 }, (_, i) => {
-  const d = new Date(anchor);
+  const d = new Date(ledgerAnchor);
   d.setDate(d.getDate() + i);
   const key = dateKey(d);
   const secs = focusDaily[key] ?? 0;
@@ -770,7 +772,7 @@ const ledgerRows = Array.from({ length: 7 }, (_, i) => {
   return {
     key,
     label: d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }),
-    wake: secs > 0 || isToday ? wakeTarget : "—",
+    wake: secs > 0 || isToday ? ledgerWake : "—",
     hours: secs > 0 ? `${(secs / 3600).toFixed(1)} hrs` : "—",
     tasks: stdTotal > 0 ? `${stdDone}/${stdTotal}` : "—",
     ghosts: ghostTotal > 0 ? `${ghostDone}/${ghostTotal}` : "—",
