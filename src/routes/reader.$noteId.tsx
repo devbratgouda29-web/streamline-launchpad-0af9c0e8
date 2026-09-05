@@ -425,7 +425,7 @@ function ReaderCompletionOverlay({
   );
 }
 
-const TOTAL_PAGES = 6;
+
 
 type Direction = "horizontal" | "vertical";
 type Background = "original" | "invert";
@@ -480,7 +480,9 @@ function PremiumReader({ noteId, mode }: { noteId: string; mode: ReaderMode }) {
     };
   }, [noteId, language]);
 
-  const totalPages = pdfPages ?? note?.page_count ?? TOTAL_PAGES;
+  // Page count comes only from the real uploaded document — no mock default.
+  const totalPages = pdfPages ?? note?.page_count ?? 0;
+
 
 
   // View mode panel state
