@@ -1,5 +1,37 @@
 // Shared readers for the Grand Performance Report (live mobile UI + PDF canvas).
 import { dateKey, loadFocusDaily } from "@/lib/weekly-badge";
+import { loadRevisionLogs } from "@/lib/revision-logs";
+import { getGhostTasks } from "@/lib/revision-engine";
+
+/**
+ * Ghost-task counts per date key.
+ * Cleared = completed recall sessions (revision logs) on that date.
+ * Total = cleared + ghost tasks still outstanding (counted on today's row).
+ */
+export function readGhostCounts(): Record<string, { cleared: number; total: number }> {
+  if (typeof window === "undefined") return {};
+  const out: Record<string, { cleared: number; total: number }> = {};
+  const bump = (key: string, cleared: number, total: number) => {
+    const cur = out[key] ?? { cleared: 0, total: 0 };
+    out[key] = { cleared: cur.cleared + cleared, total: cur.total + total };
+  };
+
+  try {
+    for (const log of loadRevisionLogs()) bump(log.date, 1, 1);
+  } catch {
+    /* ignore */
+  }
+
+  try {
+    const today = dateKey(new Date());
+    const pending = getGhostTasks();
+    if (pending.length) bump(today, 0, pending.length);
+  } catch {
+    /* ignore */
+  }
+
+  return out;
+}
 
 export type MissionDayLite = { date: string; tasks: { done: boolean }[] };
 export type HabitLite = {
