@@ -153,8 +153,10 @@ export function buildLedgerRows(
     const tasksDone = stdTasks.filter((t) => t.completed || t.done).length;
     const tasksTotal = stdTasks.length;
 
-    const ghostsCleared = ghostTasks.filter((t) => t.completed || t.done).length;
-    const ghostsTotal = ghostTasks.length;
+    const fromLogs = ghostCounts[key] ?? { cleared: 0, total: 0 };
+    const ghostsCleared =
+      ghostTasks.filter((t) => t.completed || t.done).length + fromLogs.cleared;
+    const ghostsTotal = ghostTasks.length + fromLogs.total;
 
     return {
       key,
