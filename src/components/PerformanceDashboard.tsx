@@ -381,54 +381,53 @@ function LedgerTab({ ledger }: { ledger: LedgerRow[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-    <section className="overflow-hidden rounded-2xl border border-border bg-card">
-
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-left">
-          <thead>
-            <tr className="bg-background/60 text-[9px] font-black uppercase tracking-[0.12em] text-muted-foreground">
-              <th className="px-2 py-2.5 leading-tight">Date</th>
-              <th className="px-2 py-2.5 leading-tight">Woke-Up</th>
-              <th className="px-2 py-2.5 leading-tight">Study Hours</th>
-              <th className="px-2 py-2.5 leading-tight">Tasks</th>
-              <th className="px-2 py-2.5 leading-tight">Ghost Tasks</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(ledger ?? []).map((row, i) => (
-              <tr
-                key={row?.key ?? i}
-                className={cn(
-                  "border-t border-border text-[11px] tabular-nums",
-                  row?.isToday && "bg-accent-amber/5",
-                )}
-              >
-                <td className="px-2 py-2.5 font-bold">
-                  <span className="text-muted-foreground">{row?.weekday}</span>{" "}
-                  <span className="whitespace-nowrap">{row?.dateLabel}</span>
-                  {row?.isToday && (
-                    <span className="ml-2 rounded-full bg-accent-amber/15 px-1.5 py-0.5 text-[8px] font-black uppercase tracking-widest text-accent-amber">
-                      Today
-                    </span>
-                  )}
-                </td>
-                <td className="px-2 py-2.5">{row?.wake ?? "—"}</td>
-                <td className="px-2 py-2.5 font-bold">
-                  {(Math.max(0, Number(row?.hours) || 0)).toFixed(1)} hrs
-                </td>
-                <td className="px-2 py-2.5">
-                  {row?.tasksTotal ? `${row?.tasksDone ?? 0}/${row.tasksTotal}` : "—"}
-                </td>
-                <td className="px-2 py-2.5">
-                  {row?.ghostsTotal ? `${row?.ghostsCleared ?? 0}/${row.ghostsTotal}` : "—"}
-                </td>
+      <section className="overflow-hidden rounded-2xl border border-border bg-card">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-left">
+            <thead>
+              <tr className="bg-background/60 text-[9px] font-black uppercase tracking-[0.12em] text-muted-foreground border-b border-border/50">
+                <th className="px-3 py-2.5 leading-tight text-left">Date</th>
+                <th className="px-3 py-2.5 leading-tight text-center">Woke-Up</th>
+                <th className="px-3 py-2.5 leading-tight text-center">Study Hours</th>
+                <th className="px-3 py-2.5 leading-tight text-center">Tasks</th>
+                <th className="px-3 py-2.5 leading-tight text-center">Ghost Tasks</th>
               </tr>
-            ))}
+            </thead>
+            <tbody>
+              {(ledger ?? []).map((row, i) => {
+                const stdTasksText = row?.tasksTotal ? `${row.tasksDone ?? 0}/${row.tasksTotal}` : "—";
+                const ghostTasksText = row?.ghostsTotal ? `${row.ghostsCleared ?? 0}/${row.ghostsTotal}` : "—";
 
-          </tbody>
-        </table>
-      </div>
-    </section>
+                return (
+                  <tr
+                    key={row?.key ?? i}
+                    className={cn(
+                      "border-t border-border text-[11px] tabular-nums",
+                      row?.isToday && "bg-accent-amber/5"
+                    )}
+                  >
+                    <td className="px-3 py-2.5 font-bold text-left">
+                      <span className="text-muted-foreground">{row?.weekday}</span>{" "}
+                      <span className="whitespace-nowrap">{row?.dateLabel}</span>
+                      {row?.isToday && (
+                        <span className="ml-2 rounded-full bg-accent-amber/15 px-1.5 py-0.5 text-[8px] font-bold text-amber-300">
+                          Today
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2.5 text-center">{row?.wake ?? "—"}</td>
+                    <td className="px-3 py-2.5 font-bold text-center">
+                      {row?.hours ? `${(Math.max(0, Number(row.hours))).toFixed(1)} hrs` : "0.0 hrs"}
+                    </td>
+                    <td className="px-3 py-2.5 text-center">{stdTasksText}</td>
+                    <td className="px-3 py-2.5 text-center">{ghostTasksText}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {/* Monthly Trophy Case */}
       <section className="rounded-2xl border border-accent-amber/40 bg-card p-4">
