@@ -499,9 +499,12 @@ function LibraryPage() {
           </div>
 
           {desk.length === 0 ? (
-            <p className="rounded-2xl bg-card p-6 text-center text-sm text-muted-foreground ring-1 ring-border">
-              Nothing on your desk yet. Upload a PDF or log a physical book to start tracking.
-            </p>
+            <div className="rounded-2xl bg-card p-8 text-center ring-1 ring-border">
+              <p className="text-sm font-semibold text-foreground">No documents uploaded yet</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Upload a PDF or log a physical book to start tracking.
+              </p>
+            </div>
           ) : (
             <ul className="flex flex-col gap-3">
               {desk.map((d) => {
