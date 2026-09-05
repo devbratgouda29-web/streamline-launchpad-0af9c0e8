@@ -115,6 +115,7 @@ export function buildLedgerRows(
 ): LedgerRow[] {
   const focusDaily = loadFocusDaily();
   const wake = readWakeTarget();
+  const ghostCounts = readGhostCounts();
 
   // Load actual mission diary entries directly from local storage
   const diaryRaw =
